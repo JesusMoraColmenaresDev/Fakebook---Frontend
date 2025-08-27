@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router";
 import { RouterProvider } from "react-router/dom";
 import RegisterView from "./views/autentication/RegisterView";
 import LoginView from "./views/autentication/LoginView";
+import "./styles/index.css"
 
 const router = createBrowserRouter([
   {

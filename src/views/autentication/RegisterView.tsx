@@ -1,6 +1,6 @@
 function RegisterView() {
   return (
-    <div>RegisterView</div>
+    <div className="text-6xl">RegisterView</div>
   )
 }
 
