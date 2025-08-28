@@ -1,19 +1,27 @@
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 
-type Loginform = {
+type LoginForm = {
     email: string,
     password: string
 }
 function LoginView() {
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<Loginform>()
+    const [sizeWindow, setSizeWindow] = useState(window.innerWidth)
 
-    const onsubmit = (data: Loginform) => {
+
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<LoginForm>()
+
+    const onsubmit = (data: LoginForm) => {
         console.log(data)
     }
 
-    const isTiny = window.innerWidth <= 400
+    useEffect(() => {
+        window.addEventListener('resize', () => setSizeWindow(window.innerWidth))
+        return () => window.removeEventListener('resize', () => setSizeWindow(window.innerWidth))
+    }, [])
+
+    const isTiny = sizeWindow <= 400
 
     return (
         <>  
