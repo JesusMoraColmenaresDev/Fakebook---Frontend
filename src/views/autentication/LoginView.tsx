@@ -8,8 +8,7 @@ type LoginForm = {
 function LoginView() {
 
     const [sizeWindow, setSizeWindow] = useState(window.innerWidth)
-
-
+    
     const { register, handleSubmit, reset, formState: { errors } } = useForm<LoginForm>()
 
     const onsubmit = (data: LoginForm) => {
