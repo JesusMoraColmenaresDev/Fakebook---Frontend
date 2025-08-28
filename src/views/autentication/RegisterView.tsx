@@ -1,5 +1,5 @@
 import { set, useForm } from "react-hook-form"
-import { getDaysInCurrentYearMonth } from "../../utils/dateUtils"
+import { getDaysInCurrentYearMonth, getDaysMount, GetYears } from "../../utils/dateUtils"
 import { useEffect, useState } from "react"
 
 const arrayMonths = [
@@ -21,9 +21,6 @@ function RegisterView() {
 
   const {register, handleSubmit, reset, formState: {errors}} = useForm()
   const [daysMountNumber, setDaysMountNumber] = useState(31)
-  const daysMount= Array.from({length :daysMountNumber}, (_, index) => index + 1)
-  const currentYear = new Date().getFullYear()
-  const years = Array.from({length : 100}, (_,index) => currentYear - index)
 
   const monthSelected = (e : React.ChangeEvent<HTMLSelectElement>) => {
     setDaysMountNumber(getDaysInCurrentYearMonth(parseInt(e.target.value)))
@@ -37,7 +34,7 @@ function RegisterView() {
       </div>
 
       <select id="day">
-        {daysMount.map((dayNumber) => {
+        {getDaysMount(daysMountNumber).map((dayNumber) => {
           return <option key={dayNumber} value={dayNumber}>{dayNumber}</option>
         })}
       </select>
@@ -49,7 +46,7 @@ function RegisterView() {
       </select>
 
       <select id="year" name="year">
-        {years.map((year) => {
+        {GetYears().map((year) => {
           return <option key={year} value={year}>{year}</option>
         })}
       </select>
