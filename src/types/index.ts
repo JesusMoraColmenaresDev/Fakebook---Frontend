@@ -11,3 +11,8 @@ const registerDataForm = z.object({
 })
 
 export type userDataFormType = z.infer<typeof registerDataForm>
+
+export type LoginForm = {
+    email: string,
+    password: string
+}

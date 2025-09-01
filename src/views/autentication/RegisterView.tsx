@@ -3,6 +3,9 @@ import { getDaysInCurrentYearMonth, getDaysMount, GetYears } from "../../utils/d
 import { useEffect, useState } from "react"
 import type { userDataFormType } from "../../types"
 import { api } from "../../api/apiConfig"
+import { toast } from "react-toastify"
+import { useNavigate } from "react-router"
+import axios from "axios"
 
 const arrayMonths = [
   "January",
@@ -21,9 +24,11 @@ const arrayMonths = [
 
 function RegisterView() {
 
+
   const [sizeWindow, setSizeWindow] = useState(window.innerWidth)
   const { register, handleSubmit, reset, formState: { errors } } = useForm<userDataFormType>()
   const [daysMountNumber, setDaysMountNumber] = useState(31)
+  const navigate = useNavigate()
 
   const monthSelected = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setDaysMountNumber(getDaysInCurrentYearMonth(parseInt(e.target.value)))
@@ -37,14 +42,8 @@ function RegisterView() {
   const isTiny = sizeWindow <= 500
 
   const onSubmit = async (data: userDataFormType) => {
+
     const datebirthday = new Date(parseInt(data.birthday_year), parseInt(data.birthday_month), parseInt(data.birthday_day)).toISOString().slice(0, 10)
-    console.log({
-      name: data.name,
-      last_name: data.last_name,
-      email: data.email,
-      password: data.password,
-      birthday: datebirthday
-    })
     try {
       const response = await api.post("/signup", {
         user: {
@@ -55,18 +54,21 @@ function RegisterView() {
           birthday: datebirthday
         }
       })
-
-
-      if (response.status = 201) {
+      if (response.status === 201) {
         console.log(response.data)
-      } else {
-        console.log(response)
+        toast.success("Registro exitoso , inicia sesion", {
+          autoClose: 3000,
+          position: "top-right"
+        });
+        navigate("/login")
+      } 
+    } catch (error : unknown) {
+      if(axios.isAxiosError(error)){
+        if(error.response!.data.errors.email[0]){
+          toast.error("el correo ya esta en uso")
+        }
       }
-    } catch (error) {
-      console.log(error)
     }
-
-
   }
 
   return (

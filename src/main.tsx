@@ -4,24 +4,39 @@ import { RouterProvider } from "react-router/dom";
 import RegisterView from "./views/autentication/RegisterView";
 import LoginView from "./views/autentication/LoginView";
 import "./styles/index.css"
+import { handleLogout, isLogin, isNotLogin } from "./utils/authenticationUtils";
+import HomePageView from "./views/HomePageView";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import "./styles/index.css";
+
+
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <div>Hello World</div>,
+    element: <HomePageView></HomePageView>,
+    loader: isNotLogin
   },
   {
-    path : "/register",
-    element: <RegisterView></RegisterView>
+    path: "/register",
+    element: <RegisterView></RegisterView>,
+    loader: isLogin
   },
   {
-    path : "/login",
-    element: <LoginView></LoginView>
+    path: "/login",
+    element: <LoginView></LoginView>,
+    loader: isLogin
   }
 ]);
 
 const root = document.getElementById("root")!;
 
 ReactDOM.createRoot(root).render(
-  <RouterProvider router={router} />,
+  
+  <>
+    <RouterProvider router={router} />
+    <ToastContainer/>
+  </>
+
 );

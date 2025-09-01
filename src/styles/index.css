@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+
+@media(max-width: 500px) {
+    .Toastify__toast {
+        width: fit-content;
+        margin: auto;
+        margin-top: 48px;
+        border-radius: 8px;
+    }
+}
