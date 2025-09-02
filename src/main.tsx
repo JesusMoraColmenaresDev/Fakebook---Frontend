@@ -16,6 +16,17 @@ import RootLayout from "./components/Layout";
 
 const router = createBrowserRouter([
   {
+    path: "/register",
+    element: <RegisterView></RegisterView>,
+    loader: isLogin
+  },
+  {
+    path: "/login",
+    element: <LoginView></LoginView>,
+    loader: isLogin
+  },
+
+  {
     element: <RootLayout></RootLayout>,
     children: [
       {
@@ -23,16 +34,7 @@ const router = createBrowserRouter([
         element: <HomePageView></HomePageView>,
         loader: isNotLogin
       },
-      {
-        path: "/register",
-        element: <RegisterView></RegisterView>,
-        loader: isLogin
-      },
-      {
-        path: "/login",
-        element: <LoginView></LoginView>,
-        loader: isLogin
-      },
+
       {
         path: "/profile/:userId",
         element: <ProfileView></ProfileView>,
