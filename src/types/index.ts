@@ -10,7 +10,17 @@ const registerDataForm = z.object({
     birthday_year : z.string()
 })
 
+const userData = z.object({
+    id : z.string(),
+    name : z.string(),
+    last_name : z.string(),
+	email: z.string().email(),
+    birthday: z.date()
+})
+
 export type userDataFormType = z.infer<typeof registerDataForm>
+export type userDataType = z.infer<typeof userData>
+
 
 export type LoginForm = {
     email: string,

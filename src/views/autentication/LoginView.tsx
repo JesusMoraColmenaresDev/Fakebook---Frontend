@@ -6,6 +6,7 @@ import { handleLoginSucces } from "../../utils/authenticationUtils"
 import { useNavigate } from "react-router"
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useUserStore } from "../../userStore"
 
 
 function LoginView() {
@@ -18,7 +19,7 @@ function LoginView() {
         window.addEventListener('resize', () => setSizeWindow(window.innerWidth))
         return () => window.removeEventListener('resize', () => setSizeWindow(window.innerWidth))
     }, [])
-    
+
     const isTiny = sizeWindow <= 400
 
 
@@ -36,6 +37,7 @@ function LoginView() {
                     autoClose: 3000,
                     position: "top-right"
                 });
+
                 navigate("/")
             }
         } catch (error) {
@@ -69,9 +71,9 @@ function LoginView() {
                 </div>
             </div>
 
-            
+
         </>
-        
+
     )
 }
 
