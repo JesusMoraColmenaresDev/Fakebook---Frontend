@@ -4,6 +4,8 @@ import type { userDataType } from '../types'
 import { useUserStore } from '../userStore'
 import { isAxiosError } from 'axios'
 import { api } from '../api/apiConfig'
+import EditProfileButton from '../components/profile/EditProfileButton'
+import { generateColorFromText } from '../utils/colorsUtil'
 
 export default function ProfileView() {
 
@@ -54,20 +56,28 @@ export default function ProfileView() {
                 <div className="bg-white rounded-b-lg shadow-sm">
                     {/* Profile Info Section */}
                     <div className="px-6 pb-4">
-                        <div className="flex items-end gap-6 pt-6">
-                            {/* Profile Picture */}
+                        <div className="flex  items-center gap-6 pt-6">
+                            {/* Profile Picture 
                             <img
                                 className="w-[168px] h-[168px] rounded-full object-cover border-4 border-white"
                                 src="./vite.svg"
                                 alt="Foto de perfil de Juan Pérez"
-                            />
+                            />*/
+                            }
 
+                            {ProfileUser &&
+                                <div className={`w-[120px] h-[100px] rounded-full text-4xl p-2 flex items-center justify-center text-white`} style={{ backgroundColor:  generateColorFromText(ProfileUser.name)}}>
+                                    {ProfileUser.name.split(" ")[0][0].toUpperCase()}
+                                </div>
+                            }
                             {/* Profile Details */}
-                            <div className="flex-1 pb-4">
-                                <h1 className="text-3xl font-bold mb-2">{ProfileUser?.name + " " + ProfileUser?.last_name}</h1>
-                                <p className="opacity-75 mb-3">{"cumpleaños : " + ProfileUser?.birthday}</p>
+                            <div className="flex justify-between w-full h-full">
+                                <div className='flex-col items-center h-full'>
+                                    <p className="text-3xl font-bold mb-2">{ProfileUser?.name + " " + ProfileUser?.last_name}</p>
+                                    <p className="opacity-75 mb-3">{"cumpleaños : " + ProfileUser?.birthday}</p>
+                                </div>
                                 <div className="flex items-center gap-3">
-                                    {isMyProfile && "MI FOKIN PERFIL"}
+                                    {isMyProfile && <EditProfileButton></EditProfileButton>}
                                 </div>
                             </div>
                         </div>

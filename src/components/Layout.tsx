@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router";
+import { Outlet, redirect } from "react-router";
 import { api } from "../api/apiConfig";
 import { useUserStore } from "../userStore";
 
@@ -23,6 +23,7 @@ export default function RootLayout() {
           console.error("La sesión ha expirado o el token es inválido:", error);
           localStorage.removeItem("token");
           setCurrentUser(null);
+          redirect("/login");
         }
       }
       setIsInitializing(false);
