@@ -6,6 +6,7 @@ import { isAxiosError } from 'axios'
 import { api } from '../api/apiConfig'
 import EditProfileButton from '../components/profile/EditProfileButton'
 import { generateColorFromText } from '../utils/colorsUtil'
+import FriendRequestButton from '../components/profile/FriendRequestButton'
 
 export default function ProfileView() {
 
@@ -66,7 +67,7 @@ export default function ProfileView() {
                             }
 
                             {ProfileUser &&
-                                <div className={`w-[120px] h-[100px] rounded-full text-4xl p-2 flex items-center justify-center text-white`} style={{ backgroundColor:  generateColorFromText(ProfileUser.name)}}>
+                                <div className={`w-[120px] h-[100px] rounded-full text-4xl p-2 flex items-center justify-center text-white`} style={{ backgroundColor: generateColorFromText(ProfileUser.name) }}>
                                     {ProfileUser.name.split(" ")[0][0].toUpperCase()}
                                 </div>
                             }
@@ -76,9 +77,13 @@ export default function ProfileView() {
                                     <p className="text-3xl font-bold mb-2">{ProfileUser?.name + " " + ProfileUser?.last_name}</p>
                                     <p className="opacity-75 mb-3">{"cumpleaños : " + ProfileUser?.birthday}</p>
                                 </div>
-                                <div className="flex items-center gap-3">
-                                    {isMyProfile && <EditProfileButton></EditProfileButton>}
-                                </div>
+                                {ProfileUser &&
+                                    <div className="flex items-center gap-3">
+                                        {isMyProfile ? <EditProfileButton></EditProfileButton> : <FriendRequestButton idProfile={ProfileUser?.id}></FriendRequestButton>}
+
+                                    </div>
+                                }
+
                             </div>
                         </div>
                     </div>

@@ -14,16 +14,16 @@ export function generateColorFromText(text: string): string {
   // 3. Obtener el valor numérico (código ASCII/Unicode) del carácter.
   const charCode = randomChar.charCodeAt(0);
 
-  // 4. Mapear el código del carácter a un valor de matiz (HUE) entre 0 y 360.
+  // 4. Mapear el código del carácter a un valor de matiz (HUE) enstre 0 y 360.
   //    Usamos el operador módulo (%) para asegurarnos de que el valor esté en el rango correcto.
   const hue = (charCode % 81) + 190;
 
   // 5. Definimos valores fijos de saturación y luminosidad para obtener colores vivos y visibles.
-  //    Puedes experimentar con estos valores.
+  //    Hacemos que la luminosidad también varíe para obtener azules más claros y oscuros.
   const saturation = 80; // Porcentaje (0-100)
-  const lightness = 30;  // Porcentaje (0-100)
+  // Usamos el charCode con otro cálculo para obtener un valor entre 25% y 55%.
+  const lightness = (charCode % 31) + 25; // Rango de 30 puntos, empezando en 25.
 
   // 6. Devolvemos el color en el formato HSL que CSS entiende directamente.
-  //    ¡No se necesita ninguna conversión a RGB!
-  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  return `hsl(${hue},${saturation}%,${lightness}%)`;
 }
