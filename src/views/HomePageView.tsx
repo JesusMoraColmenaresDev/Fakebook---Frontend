@@ -5,6 +5,7 @@ import UserProfileItem from '../components/profile/UserProfileItem'
 import { api } from '../api/apiConfig'
 import type { userDataType } from '../types'
 import { generateColorFromText } from '../utils/colorsUtil'
+import { getAllUsers } from '../api/userApi'
 
 export default function HomePageView() {
   const navigate = useNavigate()
@@ -12,12 +13,8 @@ export default function HomePageView() {
 
   useEffect(() => {
     const getUsers = async () => {
-      try {
-        const response = await api.get("/users")
-        setUsers(response.data)
-      } catch (error) {
-        console.log(error)
-      }
+      const users = await getAllUsers()
+      setUsers(users)
     }
     getUsers()
   }, [])

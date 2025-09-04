@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { Await, useParams } from 'react-router'
-import type { userDataType } from '../types'
+import type { friendshipDataType, userDataType } from '../types'
 import { useUserStore } from '../userStore'
 import { isAxiosError } from 'axios'
 import { api } from '../api/apiConfig'
 import EditProfileButton from '../components/profile/EditProfileButton'
 import { generateColorFromText } from '../utils/colorsUtil'
 import FriendRequestButton from '../components/profile/FriendRequestButton'
+import { getUserById } from '../api/userApi'
+import { getFriendship } from '../api/friendshipApi'
 
 export default function ProfileView() {
 
     const { userId } = useParams<{ userId: string }>()
     const [ProfileUser, setProfileUser] = useState<userDataType | null>(null)
+    const [friendshipProfileUser, setFriendshipWithProfileUser] = useState<friendshipDataType>()
     const { currentUser } = useUserStore()
 
     const [isLoading, setIsLoading] = useState(true);
@@ -20,6 +23,47 @@ export default function ProfileView() {
     // 3. Determinar si estamos viendo nuestro propio perfil
     const isMyProfile = currentUser?.id.toString() === userId;
 
+    const renderFriendshipActions = () => {
+        if (isMyProfile) {
+            return <EditProfileButton />;
+        }
+
+        // Si no hay una relación de amistad, mostramos el botón para enviar solicitud
+        if (!friendshipProfileUser) {
+            if (ProfileUser) {
+                return <FriendRequestButton idProfile={ProfileUser.id} />;
+            }
+            return null;
+        }
+
+        const { status, user_id } = friendshipProfileUser;
+        const currentUserId = currentUser?.id.toString();
+
+        switch (status) {
+            case 'pending':
+                // Si el usuario actual es quien envió la solicitud
+                if (currentUserId === user_id.toString()) {
+                    // TODO: Implementar la lógica para cancelar la solicitud
+                    return <button className="flex gap-2 w-fit px-4 py-2 bg-gray-500 text-white rounded-lg">Cancelar Solicitud</button>;
+                } else {
+                    // Si el usuario actual es quien recibió la solicitud
+                    // TODO: Implementar la lógica para aceptar/rechazar
+                    return (
+                        <div className="flex gap-2">
+                            <button className="flex gap-2 w-fit px-4 py-2 bg-[#1877f2] text-white rounded-lg">Confirmar</button>
+                            <button className="flex gap-2 w-fit px-4 py-2 bg-gray-300 text-black rounded-lg">Eliminar solicitud</button>
+                        </div>
+                    );
+                }
+            case 'accepted':
+                // TODO: Implementar la lógica para eliminar amigo
+                return <button className="flex gap-2 w-fit px-4 py-2 bg-gray-500 text-white rounded-lg">Amigos</button>;
+            default:
+                // Para otros estados como 'declined', 'cancelled', o si no hay amistad, se podría volver a mostrar el botón de agregar.
+                return ProfileUser ? <FriendRequestButton idProfile={ProfileUser.id} /> : null;
+        }
+    };
+
     useEffect(() => {
         const fetchUserProfile = async () => {
             if (isMyProfile) {
@@ -27,25 +71,28 @@ export default function ProfileView() {
                 setIsLoading(false)
                 setError(null);
             } else {
-                try {
-                    setIsLoading(true);
-                    const response = await api.get("/users/" + userId)
-                    if (response.status === 200) {
-                        setProfileUser(response.data)
-                        setIsLoading(false)
-                        setError(null);
-                    }
+                setIsLoading(true);
+                const user = await getUserById(userId!)
+                if (user) {
+                    setProfileUser(user)
+                    setIsLoading(false)
+                    setError(null);
+                }
 
-                } catch (error) {
-                    if (isAxiosError(error)) {
-                        console.log(error)
-                        setIsLoading(true);
-                        setError(error.message)
-                    }
+            }
+        }
+
+        const fetchUserFriendship = async () => {
+            if (!isMyProfile){
+                const friendship = await getFriendship(userId!)
+                if (friendship) {
+                    setFriendshipWithProfileUser(friendship)
                 }
             }
         }
         fetchUserProfile()
+        fetchUserFriendship()
+
     }, [userId, currentUser, isMyProfile])
 
     if (isLoading) return <div>CARGANDO...</div>
@@ -77,13 +124,9 @@ export default function ProfileView() {
                                     <p className="text-3xl font-bold mb-2">{ProfileUser?.name + " " + ProfileUser?.last_name}</p>
                                     <p className="opacity-75 mb-3">{"cumpleaños : " + ProfileUser?.birthday}</p>
                                 </div>
-                                {ProfileUser &&
-                                    <div className="flex items-center gap-3">
-                                        {isMyProfile ? <EditProfileButton></EditProfileButton> : <FriendRequestButton idProfile={ProfileUser?.id}></FriendRequestButton>}
-
-                                    </div>
-                                }
-
+                                <div className="flex items-center gap-3">
+                                    {renderFriendshipActions()}
+                                </div>
                             </div>
                         </div>
                     </div>
