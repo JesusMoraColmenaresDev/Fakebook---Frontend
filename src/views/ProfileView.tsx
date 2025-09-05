@@ -115,7 +115,7 @@ export default function ProfileView() {
                         <div className="flex px-6">
                             {<ButtonSectionProfile to='.' activeSection={profileSection} setActiveSection={setProfileSection} sectionName='Publicaciones'></ButtonSectionProfile>}
                             {<ButtonSectionProfile to="friends" activeSection={profileSection} setActiveSection={setProfileSection} sectionName='Amigos'></ButtonSectionProfile>}
-                            {<ButtonSectionProfile to="about" activeSection={profileSection} setActiveSection={setProfileSection} sectionName='Información'></ButtonSectionProfile>}
+                            {<ButtonSectionProfile to="about" activeSection={profileSection} setActiveSection={setProfileSection} sectionName='Informacion'></ButtonSectionProfile>}
                         </div>
                     </div>
                 </div>
