@@ -12,6 +12,9 @@ import "./styles/index.css";
 import ProfileView from "./views/ProfileView";
 import RootLayout from "./components/Layout";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import ProfileFriends from "./components/profile/ProfileFriends";
+import ProfileAbout from "./components/profile/ProfileAbout";
+import ProfilePost from "./components/profile/ProfilePost";
 
 
 
@@ -39,7 +42,21 @@ const router = createBrowserRouter([
       {
         path: "/profile/:userId",
         element: <ProfileView></ProfileView>,
-        loader: isNotLogin
+        loader: isNotLogin,
+          children: [
+          {
+            index: true, // Esta es la ruta por defecto (ej: /profile/123)
+            element: <ProfilePost />,
+          },
+          {
+            path: "friends", // Corresponde a /profile/123/friends
+            element: <ProfileFriends />,
+          },
+          {
+            path: "about", // Corresponde a /profile/123/about
+            element: <ProfileAbout />,
+          }
+        ]
       }
     ]
   }

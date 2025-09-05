@@ -1,5 +1,4 @@
 import { Pencil } from "lucide-react";
-import { generateColorFromText } from "../../utils/colorsUtil";
 
 export default function EditProfileButton() {
     

@@ -1,5 +1,5 @@
 import React, { use, useEffect, useState } from 'react'
-import { Await, useParams } from 'react-router'
+import { Await, NavLink, Outlet, useParams } from 'react-router'
 import type { friendshipDataType, userDataType } from '../types'
 import { useUserStore } from '../userStore'
 import { isAxiosError } from 'axios'
@@ -11,6 +11,7 @@ import { getUserById, useGetUserById } from '../api/userApi'
 import { getFriendship, useGetFriendship } from '../api/friendshipApi'
 import CancelFriendRequestButton from '../components/friendships/CancelFriendRequestButton'
 import ConfirmFriendRequestButton from '../components/friendships/ConfirmFriendRequestButton'
+import ButtonSectionProfile from '../components/profile/ButtonSectionProfile'
 
 export default function ProfileView() {
     const { userId } = useParams<{ userId: string }>()
@@ -18,6 +19,10 @@ export default function ProfileView() {
     const { currentUser } = useUserStore()
     // 3. Determinar si estamos viendo nuestro propio perfil
     const isMyProfile = currentUser?.id.toString() === userId;
+
+    //detectar en que seccion del perfil esta el usuario
+    const [profileSection, setProfileSection] = useState('publicaciones');
+
 
     const { profileUser, isLoadingUser, userError } = useGetUserById(userId!, isMyProfile)
     const { friendshipProfileUser, isLoadingFriendship, friendshipError } = useGetFriendship(userId!, isMyProfile)
@@ -108,27 +113,15 @@ export default function ProfileView() {
                     {/* Navigation Tabs */}
                     <div className="border-t border-gray-200">
                         <div className="flex px-6">
-                            <button className="px-4 py-4 text-[#1877f2] border-b-2 border-[#1877f2] font-semibold">
-                                Publicaciones
-                            </button>
-                            <button className="px-4 py-4 text-gray-600 hover:bg-gray-100 font-semibold">Información</button>
-                            <button className="px-4 py-4 text-gray-600 hover:bg-gray-100 font-semibold">Amigos</button>
+                            {<ButtonSectionProfile to='.' activeSection={profileSection} setActiveSection={setProfileSection} sectionName='Publicaciones'></ButtonSectionProfile>}
+                            {<ButtonSectionProfile to="friends" activeSection={profileSection} setActiveSection={setProfileSection} sectionName='Amigos'></ButtonSectionProfile>}
+                            {<ButtonSectionProfile to="about" activeSection={profileSection} setActiveSection={setProfileSection} sectionName='Información'></ButtonSectionProfile>}
                         </div>
                     </div>
                 </div>
 
-                {/* Main Content Area */}
-                <div className="flex gap-6 mt-6">
-                    {/* Left Sidebar */}
-                    <div className="w-80">
-                    </div>
-
-                    {/* Main Feed */}
-                    <div className="flex-1">
-
-                    </div>
-                </div>
+                <Outlet />
             </div>
-        </div>
+        </div >
     )
 }
