@@ -19,8 +19,10 @@ export default function ConfirmFriendRequestButton({ idFriendship }: confirmFrie
             // 4. Cuando la mutación sea exitosa, invalidamos la query de la amistad.
             // React Query buscará la query con esta clave (en ProfileView) y la volverá a ejecutar,
             // actualizando la UI automáticamente.
-            console.log("Amistad aceptada, invalidando query ['friendship',", userId, "]")
+            console.log("Amistad aceptada, invalidando queries.")
             queryClient.invalidateQueries({ queryKey: ['friendship', userId] })
+            // También invalidamos la lista de amigos, ya que ha cambiado.
+            queryClient.invalidateQueries({ queryKey: ['UsersFriends', userId] })
         }
     })
 

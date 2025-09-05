@@ -9,11 +9,6 @@ export const getFriendship = async (userId: string) => {
 
 }
 
-export const getAllFriendships = async () => {
-    const response = await api.get("/friendships")
-    return response.data
-}
-
 export const sendRequestFriendship = async (idProfile: string) => {
     const response = await api.post("/friendships", {
         friendship: {
@@ -51,18 +46,4 @@ export const useGetFriendship = (userId: string, isMyProfile: boolean) => {
 }
 
 
-export const useGetAllFriendship = () => {
-    const {
-        data: allFriendship,
-        isLoading: isLoadingFriendship,
-        error: friendshipError
-    } = useQuery<AllfriendshipDataType>({
-        queryKey: ['Allfriendship'],
-        queryFn: () => getAllFriendships(),
-    })
-
-    return(
-        {allFriendship, isLoadingFriendship, friendshipError}
-    )
-}
 

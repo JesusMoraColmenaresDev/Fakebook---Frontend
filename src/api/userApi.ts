@@ -57,7 +57,7 @@ export const useGetAllUserFriends = (userId: string) => {
         isLoading: isLoadingFriends, 
         error: friendsError 
     } = useQuery<AllfriendshipDataType>({
-        queryKey: ['friends', userId],
+        queryKey: ['UsersFriends', userId],
         queryFn: () => getAllUserFriends(userId!),
         
         // `enabled` nos permite controlar si la consulta debe ejecutarse.

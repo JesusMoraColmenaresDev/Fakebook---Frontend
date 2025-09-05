@@ -1,5 +1,4 @@
 import React from 'react'
-import { useGetAllFriendship } from '../../api/friendshipApi'
 import type { AllfriendshipDataType, friendshipDataType, userDataType } from '../../types'
 import { useGetAllUserFriends } from '../../api/userApi'
 
