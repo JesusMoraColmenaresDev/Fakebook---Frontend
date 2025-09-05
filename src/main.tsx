@@ -43,20 +43,6 @@ const router = createBrowserRouter([
         path: "/profile/:userId",
         element: <ProfileView></ProfileView>,
         loader: isNotLogin,
-          children: [
-          {
-            index: true, // Esta es la ruta por defecto (ej: /profile/123)
-            element: <ProfilePost />,
-          },
-          {
-            path: "friends", // Corresponde a /profile/123/friends
-            element: <ProfileFriends />,
-          },
-          {
-            path: "about", // Corresponde a /profile/123/about
-            element: <ProfileAbout />,
-          }
-        ]
       }
     ]
   }

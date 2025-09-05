@@ -12,6 +12,9 @@ import { getFriendship, useGetFriendship } from '../api/friendshipApi'
 import CancelFriendRequestButton from '../components/friendships/CancelFriendRequestButton'
 import ConfirmFriendRequestButton from '../components/friendships/ConfirmFriendRequestButton'
 import ButtonSectionProfile from '../components/profile/ButtonSectionProfile'
+import ProfilePost from '../components/profile/ProfilePost'
+import ProfileFriends from '../components/profile/ProfileFriends'
+import ProfileAbout from '../components/profile/ProfileAbout'
 
 export default function ProfileView() {
     const { userId } = useParams<{ userId: string }>()
@@ -113,14 +116,24 @@ export default function ProfileView() {
                     {/* Navigation Tabs */}
                     <div className="border-t border-gray-200">
                         <div className="flex px-6">
-                            {<ButtonSectionProfile to='.' activeSection={profileSection} setActiveSection={setProfileSection} sectionName='Publicaciones'></ButtonSectionProfile>}
-                            {<ButtonSectionProfile to="friends" activeSection={profileSection} setActiveSection={setProfileSection} sectionName='Amigos'></ButtonSectionProfile>}
-                            {<ButtonSectionProfile to="about" activeSection={profileSection} setActiveSection={setProfileSection} sectionName='Informacion'></ButtonSectionProfile>}
+                            {<ButtonSectionProfile activeSection={profileSection} setActiveSection={setProfileSection} sectionName='Publicaciones'></ButtonSectionProfile>}
+                            {<ButtonSectionProfile activeSection={profileSection} setActiveSection={setProfileSection} sectionName='Amigos'></ButtonSectionProfile>}
+                            {<ButtonSectionProfile activeSection={profileSection} setActiveSection={setProfileSection} sectionName='Informacion'></ButtonSectionProfile>}
                         </div>
                     </div>
                 </div>
 
-                <Outlet />
+                {profileSection === 'Publicaciones' &&
+                    <ProfilePost></ProfilePost>
+                }
+                {profileSection === 'Amigos' &&
+                    <ProfileFriends userId={finalProfileUser.id!}></ProfileFriends>
+                }
+                {profileSection === 'Informacion' &&
+                    <ProfileAbout></ProfileAbout>
+                }
+                
+                       
             </div>
         </div >
     )

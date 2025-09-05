@@ -28,6 +28,7 @@ const friendshipData = z.object({
 export type userDataFormType = z.infer<typeof registerDataForm>
 export type userDataType = z.infer<typeof userData>
 export type friendshipDataType = z.infer<typeof friendshipData>
+export type AllfriendshipDataType = userDataType[]
 
 
 
