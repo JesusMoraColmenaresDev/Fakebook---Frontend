@@ -6,22 +6,25 @@ import { isAxiosError } from 'axios'
 import { api } from '../api/apiConfig'
 import EditProfileButton from '../components/profile/EditProfileButton'
 import { generateColorFromText } from '../utils/colorsUtil'
-import FriendRequestButton from '../components/profile/FriendRequestButton'
-import { getUserById } from '../api/userApi'
-import { getFriendship } from '../api/friendshipApi'
+import FriendRequestButton from '../components/friendships/FriendRequestButton'
+import { getUserById, useGetUserById } from '../api/userApi'
+import { getFriendship, useGetFriendship } from '../api/friendshipApi'
+import CancelFriendRequestButton from '../components/friendships/CancelFriendRequestButton'
+import ConfirmFriendRequestButton from '../components/friendships/ConfirmFriendRequestButton'
 
 export default function ProfileView() {
-
     const { userId } = useParams<{ userId: string }>()
-    const [ProfileUser, setProfileUser] = useState<userDataType | null>(null)
-    const [friendshipProfileUser, setFriendshipWithProfileUser] = useState<friendshipDataType>()
+    //const [friendshipProfileUser, setFriendshipWithProfileUser] = useState<friendshipDataType>()
     const { currentUser } = useUserStore()
-
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-
     // 3. Determinar si estamos viendo nuestro propio perfil
     const isMyProfile = currentUser?.id.toString() === userId;
+
+    const { profileUser, isLoadingUser, userError } = useGetUserById(userId!, isMyProfile)
+    const { friendshipProfileUser, isLoadingFriendship, friendshipError } = useGetFriendship(userId!, isMyProfile)
+
+
+    const finalProfileUser = isMyProfile ? currentUser : profileUser
+
 
     const renderFriendshipActions = () => {
         if (isMyProfile) {
@@ -30,8 +33,8 @@ export default function ProfileView() {
 
         // Si no hay una relación de amistad, mostramos el botón para enviar solicitud
         if (!friendshipProfileUser) {
-            if (ProfileUser) {
-                return <FriendRequestButton idProfile={ProfileUser.id} />;
+            if (finalProfileUser) {
+                return <FriendRequestButton idProfile={finalProfileUser.id} textButton={"Agregar amigo"} />;
             }
             return null;
         }
@@ -44,59 +47,29 @@ export default function ProfileView() {
                 // Si el usuario actual es quien envió la solicitud
                 if (currentUserId === user_id.toString()) {
                     // TODO: Implementar la lógica para cancelar la solicitud
-                    return <button className="flex gap-2 w-fit px-4 py-2 bg-gray-500 text-white rounded-lg">Cancelar Solicitud</button>;
+                    return <CancelFriendRequestButton idFriendship={friendshipProfileUser.id} textButton="Cancelar solicitud"></CancelFriendRequestButton>
                 } else {
                     // Si el usuario actual es quien recibió la solicitud
-                    // TODO: Implementar la lógica para aceptar/rechazar
+                    // osea si no es el user_id , entonces sera el friendId
                     return (
                         <div className="flex gap-2">
-                            <button className="flex gap-2 w-fit px-4 py-2 bg-[#1877f2] text-white rounded-lg">Confirmar</button>
-                            <button className="flex gap-2 w-fit px-4 py-2 bg-gray-300 text-black rounded-lg">Eliminar solicitud</button>
+                            <ConfirmFriendRequestButton idFriendship={friendshipProfileUser.id}></ConfirmFriendRequestButton>
+                            <CancelFriendRequestButton idFriendship={friendshipProfileUser.id} textButton="Eliminar solicitud"></CancelFriendRequestButton>
                         </div>
                     );
                 }
             case 'accepted':
                 // TODO: Implementar la lógica para eliminar amigo
-                return <button className="flex gap-2 w-fit px-4 py-2 bg-gray-500 text-white rounded-lg">Amigos</button>;
-            default:
-                // Para otros estados como 'declined', 'cancelled', o si no hay amistad, se podría volver a mostrar el botón de agregar.
-                return ProfileUser ? <FriendRequestButton idProfile={ProfileUser.id} /> : null;
+                return (
+                    <div className='flex gap-2'>
+                        <div className="flex gap-2 w-fit px-4 py-2 bg-[#1877f2] text-white rounded-lg">Amigos</div>
+                        <CancelFriendRequestButton idFriendship={friendshipProfileUser.id} textButton="Eliminar de amigos"></CancelFriendRequestButton>
+                    </div>
+                )
+
+
         }
     };
-
-    useEffect(() => {
-        const fetchUserProfile = async () => {
-            if (isMyProfile) {
-                setProfileUser(useUserStore.getState().currentUser)
-                setIsLoading(false)
-                setError(null);
-            } else {
-                setIsLoading(true);
-                const user = await getUserById(userId!)
-                if (user) {
-                    setProfileUser(user)
-                    setIsLoading(false)
-                    setError(null);
-                }
-
-            }
-        }
-
-        const fetchUserFriendship = async () => {
-            if (!isMyProfile){
-                const friendship = await getFriendship(userId!)
-                if (friendship) {
-                    setFriendshipWithProfileUser(friendship)
-                }
-            }
-        }
-        fetchUserProfile()
-        fetchUserFriendship()
-
-    }, [userId, currentUser, isMyProfile])
-
-    if (isLoading) return <div>CARGANDO...</div>
-    if (error) return <div>{error}</div>
 
     return (
         <div className="min-h-screen bg-[#F0F2F5]">
@@ -113,19 +86,20 @@ export default function ProfileView() {
                             />*/
                             }
 
-                            {ProfileUser &&
-                                <div className={`w-[120px] h-[100px] rounded-full text-4xl p-2 flex items-center justify-center text-white`} style={{ backgroundColor: generateColorFromText(ProfileUser.name) }}>
-                                    {ProfileUser.name.split(" ")[0][0].toUpperCase()}
+                            {finalProfileUser &&
+                                <div className={`w-[120px] h-[100px] rounded-full text-4xl p-2 flex items-center justify-center text-white`} style={{ backgroundColor: generateColorFromText(finalProfileUser.name) }}>
+                                    {finalProfileUser.name.split(" ")[0][0].toUpperCase()}
                                 </div>
                             }
                             {/* Profile Details */}
                             <div className="flex justify-between w-full h-full">
                                 <div className='flex-col items-center h-full'>
-                                    <p className="text-3xl font-bold mb-2">{ProfileUser?.name + " " + ProfileUser?.last_name}</p>
-                                    <p className="opacity-75 mb-3">{"cumpleaños : " + ProfileUser?.birthday}</p>
+                                    <p className="text-3xl font-bold mb-2">{finalProfileUser?.name + " " + finalProfileUser?.last_name}</p>
+                                    <p className="opacity-75 mb-3">{"cumpleaños : " + finalProfileUser?.birthday}</p>
                                 </div>
                                 <div className="flex items-center gap-3">
                                     {renderFriendshipActions()}
+
                                 </div>
                             </div>
                         </div>

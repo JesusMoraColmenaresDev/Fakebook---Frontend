@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { api } from "./apiConfig";
 
 export const getCurrentUser = async () => {
@@ -14,26 +15,30 @@ export const getCurrentUser = async () => {
 }
 
 export const getAllUsers = async () => {
-    try {
-        const response = await api.get("/users");
-        if (response.status === 200) {
-            return response.data
-        }
-    }
-    catch (error) {
-        console.log(error)
-    }
+    const response = await api.get("/users");
+    return response.data;
 }
 
 
 export const getUserById = async (userId: string) => {
-    try {
-        const response = await api.get("/users/" + userId)
-        if (response.status === 200) {
-            return response.data
-        }
-    }
-    catch (error) {
-        console.log(error)
-    }
+    const response = await api.get("/users/" + userId);
+    return response.data;
+}
+
+
+export const useGetUserById = (userId: string, isMyProfile: boolean) => {
+        const { 
+        data: profileUser, 
+        isLoading: isLoadingUser, 
+        error: userError 
+    } = useQuery({
+        queryKey: ['userProfile', userId],
+        queryFn: () => getUserById(userId!),
+        
+        // `enabled` nos permite controlar si la consulta debe ejecutarse.
+        // No queremos hacer una llamada a la API si estamos en nuestro propio perfil.
+        enabled: !isMyProfile,
+    });
+
+    return {profileUser, isLoadingUser, userError}
 }

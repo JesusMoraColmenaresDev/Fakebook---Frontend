@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./styles/index.css";
 import ProfileView from "./views/ProfileView";
 import RootLayout from "./components/Layout";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 
 
 
@@ -44,13 +45,15 @@ const router = createBrowserRouter([
   }
 ]);
 
+export const queryClient = new QueryClient()
+
 const root = document.getElementById("root")!;
 
 ReactDOM.createRoot(root).render(
 
-  <>
+  <QueryClientProvider client={queryClient}>
     <RouterProvider router={router} />
     <ToastContainer />
-  </>
+  </QueryClientProvider>
 
 );
