@@ -15,6 +15,8 @@ import ButtonSectionProfile from '../components/profile/ButtonSectionProfile'
 import ProfilePost from '../components/profile/ProfilePost'
 import ProfileFriends from '../components/profile/ProfileFriends'
 import ProfileAbout from '../components/profile/ProfileAbout'
+import CreatePostModal from '../components/post/CreatePostModal'
+import Box from '@mui/material/Box'
 
 export default function ProfileView() {
     const { userId } = useParams<{ userId: string }>()
@@ -39,7 +41,13 @@ export default function ProfileView() {
 
     const renderFriendshipActions = () => {
         if (isMyProfile) {
-            return <EditProfileButton />;
+            return (
+                <div className='flex gap-4'>
+                    <EditProfileButton/>
+                    <CreatePostModal></CreatePostModal>
+                </div>
+
+            );
         }
 
         // Si no hay una relación de amistad, mostramos el botón para enviar solicitud
@@ -73,7 +81,7 @@ export default function ProfileView() {
                 // TODO: Implementar la lógica para eliminar amigo
                 return (
                     <div className='flex gap-2'>
-                        <div className="flex gap-2 w-fit px-4 py-2 bg-[#1877f2] text-white rounded-lg">Amigos</div>
+                        <Box className="flex gap-2 w-fit px-4 py-2 bg-[#1877f2] text-white rounded-lg">Amigos</Box>
                         <CancelFriendRequestButton idFriendship={friendshipProfileUser.id.toString()} textButton="Eliminar de amigos"></CancelFriendRequestButton>
                     </div>
                 )
@@ -128,7 +136,7 @@ export default function ProfileView() {
                 </div>
 
                 {profileSection === 'Publicaciones' &&
-                    <ProfilePost></ProfilePost>
+                    <ProfilePost userId={finalProfileUser!.id.toString()}></ProfilePost>
                 }
                 {profileSection === 'Amigos' &&
                     <>

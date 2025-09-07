@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { sendRequestFriendship } from "../../api/friendshipApi";
 import { useParams } from "react-router";
+import Button from "@mui/material/Button";
 
 type FriendRequestButtonProps = {
     idProfile: string,
@@ -21,10 +22,9 @@ export default function FriendRequestButton({ idProfile, textButton }: FriendReq
     });
 
     return (
-        <button
-            className="flex gap-2 w-fit px-4 py-2 bg-[#1877f2] text-white rounded-lg disabled:bg-blue-300 disabled:cursor-not-allowed"
+        <Button variant="contained"
             onClick={() => sendRequestMutation.mutate(idProfile)}
             disabled={sendRequestMutation.isPending}
-        >{textButton}</button>
+        >{textButton}</Button>
     )
 }

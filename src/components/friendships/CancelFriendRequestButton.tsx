@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { deleteFriendship } from "../../api/friendshipApi"
 import { useParams } from "react-router"
+import Button from "@mui/material/Button"
 
 type cancelFriendRequestButtonType = {
     idFriendship: string,
@@ -24,12 +25,13 @@ export default function CancelFriendRequestButton({ textButton, idFriendship }: 
     })
 
     return (
-        <button
+        <Button
+            color="error"
+            variant="contained"
             onClick={() => deleteMutation.mutate(idFriendship)}
             disabled={deleteMutation.isPending}
-            className="flex gap-2 w-fit px-4 py-2 bg-[#FA3E3E] text-white rounded-lg disabled:bg-gray-300 disabled:cursor-not-allowed"
         >
             {textButton}
-        </button>
+        </Button>
     )
 }

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { acceptFriendship } from "../../api/friendshipApi"
 import { useParams } from "react-router"
+import Button from "@mui/material/Button"
 
 type confirmFriendRequestButton = {
     idFriendship: string
@@ -27,10 +28,10 @@ export default function ConfirmFriendRequestButton({ idFriendship }: confirmFrie
     })
 
     return (
-        <button
+        <Button
+            variant="contained"
             onClick={() => acceptMutation.mutate(idFriendship)}
             disabled={acceptMutation.isPending} // Deshabilitamos el botón mientras la petición está en curso.
-            className="flex gap-2 w-fit px-4 py-2 bg-[#1877f2] text-white rounded-lg disabled:bg-blue-300 disabled:cursor-not-allowed"
-        >{"Confirmar"}</button>
+        >{"Confirmar"}</Button>
     )
 }
