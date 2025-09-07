@@ -1,27 +1,33 @@
 
 import { useQuery } from "@tanstack/react-query"
 import { api } from "./apiConfig"
-import type { AllfriendshipDataType } from "../types"
+import { friendshipData, friendshipDataArray } from "../types"
 
 export const getFriendship = async (userId: string) => {
-    const statusFriendship = await api.get("/friendships/status/" + userId)
-    return statusFriendship.data
-
+    const {data} = await api.get("/friendships/status/" + userId)
+    const response = friendshipData.safeParse(data)
+    if (response.success){
+        return response.data
+    }else{
+        return null
+    };
 }
 
 export const sendRequestFriendship = async (idProfile: string) => {
-    const response = await api.post("/friendships", {
+    const { data } = await api.post("/friendships", {
         friendship: {
             friend_id: idProfile
         }
     })
-    return response.data
+    const response = friendshipData.safeParse(data)
+    if (response.success) return response.data;
 }
 
 
 export const acceptFriendship = async (idFriendship: string) => {
-    const response = await api.patch("/friendships/" + idFriendship)
-    return response.data
+    const {data} = await api.patch("/friendships/" + idFriendship)
+    const response = friendshipData.safeParse(data)
+    if (response.success) return response.data;
 }
 
 export const deleteFriendship = async (idFriendship: string) => {

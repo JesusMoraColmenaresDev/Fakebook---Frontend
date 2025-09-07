@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "./apiConfig";
 import { use } from "react";
-import type { AllfriendshipDataType } from "../types";
+import { userData, userDataArray, userDataForItemsArray, type AllfriendshipDataType } from "../types";
 
 export const getCurrentUser = async () => {
     try {
@@ -17,53 +17,57 @@ export const getCurrentUser = async () => {
 }
 
 export const getAllUsers = async () => {
-    const response = await api.get("/users");
-    return response.data;
+    const { data } = await api.get("/users");
+    const response = userDataForItemsArray.safeParse(data);
+    console.log(response.error?.message)
+    if (response.success) return response.data;
 }
 
-export const getAllUserFriends = async(userId: string) => {
-    const response = await api.get("/users/" + userId + "/friends");
-    return response.data;
+export const getAllUserFriends = async (userId: string) => {
+    const {data} = await api.get("/users/" + userId + "/friends");
+    const response = userDataForItemsArray.safeParse(data)
+     if (response.success) return response.data;
 }
 
 
 export const getUserById = async (userId: string) => {
-    const response = await api.get("/users/" + userId);
-    return response.data;
+    const { data } = await api.get("/users/" + userId);
+    const response = userData.safeParse(data);
+    console.log(response)
+    if (response.success) return response.data;
 }
 
 
 export const useGetUserById = (userId: string, isMyProfile: boolean) => {
-        const { 
-        data: profileUser, 
-        isLoading: isLoadingUser, 
-        error: userError 
+    const {
+        data: profileUser,
+        isLoading: isLoadingUser,
+        error: userError
     } = useQuery({
         queryKey: ['userProfile', userId],
         queryFn: () => getUserById(userId!),
-        
         // `enabled` nos permite controlar si la consulta debe ejecutarse.
         // No queremos hacer una llamada a la API si estamos en nuestro propio perfil.
         enabled: !isMyProfile,
     });
 
-    return {profileUser, isLoadingUser, userError}
+    return { profileUser, isLoadingUser, userError }
 }
 
 
 export const useGetAllUserFriends = (userId: string) => {
-        const { 
-        data: Friends, 
-        isLoading: isLoadingFriends, 
-        error: friendsError 
-    } = useQuery<AllfriendshipDataType>({
+    const {
+        data: Friends,
+        isLoading: isLoadingFriends,
+        error: friendsError
+    } = useQuery({
         queryKey: ['UsersFriends', userId],
         queryFn: () => getAllUserFriends(userId!),
-        
+
         // `enabled` nos permite controlar si la consulta debe ejecutarse.
         // No queremos hacer una llamada a la API si estamos en nuestro propio perfil.
     });
 
-    return {Friends, isLoadingFriends, friendsError}
+    return { Friends, isLoadingFriends, friendsError }
 }
 

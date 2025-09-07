@@ -10,25 +10,44 @@ const registerDataForm = z.object({
     birthday_year: z.string()
 })
 
-const userData = z.object({
-    id: z.string(),
+export const userData = z.object({
+    id: z.number(),
     name: z.string(),
     last_name: z.string(),
     email: z.string().email(),
-    birthday: z.date()
+    birthday: z.string()
 })
 
-const friendshipData = z.object({
-    id: z.string(),
-    friend_id: z.string(),
-    user_id: z.string(),
+export const userDataForItems = z.object({
+    id: z.number(),
+    name: z.string(),
+    last_name: z.string(),
+})
+
+export const userDataForItemsArray = z.array(userDataForItems)
+
+export const userDataArray = z.array(userData)
+
+export const friendshipData = z.object({
+    id: z.number(),
+    friend_id: z.number(),
+    user_id: z.number(),
     status: z.string()
 })
+
+export const friendshipDataArray = z.array(friendshipData)
+
+
 
 export type userDataFormType = z.infer<typeof registerDataForm>
 export type userDataType = z.infer<typeof userData>
 export type friendshipDataType = z.infer<typeof friendshipData>
 export type AllfriendshipDataType = userDataType[]
+export type userDataArrayType = z.infer<typeof userDataArray>
+export type userDataForItemsArrayType = z.infer<typeof userDataForItemsArray>
+export type userDataForItemsType = z.infer<typeof userDataForItems>
+
+
 
 
 

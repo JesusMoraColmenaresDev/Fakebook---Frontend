@@ -24,15 +24,18 @@ export default function ProfileView() {
     const isMyProfile = currentUser?.id.toString() === userId;
 
     //detectar en que seccion del perfil esta el usuario
-    const [profileSection, setProfileSection] = useState('publicaciones');
+    const [profileSection, setProfileSection] = useState('Publicaciones');
+
+    useEffect(() => {
+        setProfileSection('Publicaciones')
+    }, [userId])
 
 
     const { profileUser, isLoadingUser, userError } = useGetUserById(userId!, isMyProfile)
     const { friendshipProfileUser, isLoadingFriendship, friendshipError } = useGetFriendship(userId!, isMyProfile)
-
+    console.log(friendshipProfileUser)
 
     const finalProfileUser = isMyProfile ? currentUser : profileUser
-
 
     const renderFriendshipActions = () => {
         if (isMyProfile) {
@@ -42,7 +45,7 @@ export default function ProfileView() {
         // Si no hay una relación de amistad, mostramos el botón para enviar solicitud
         if (!friendshipProfileUser) {
             if (finalProfileUser) {
-                return <FriendRequestButton idProfile={finalProfileUser.id} textButton={"Agregar amigo"} />;
+                return <FriendRequestButton idProfile={finalProfileUser.id.toString()} textButton={"Agregar amigo"} />;
             }
             return null;
         }
@@ -55,14 +58,14 @@ export default function ProfileView() {
                 // Si el usuario actual es quien envió la solicitud
                 if (currentUserId === user_id.toString()) {
                     // TODO: Implementar la lógica para cancelar la solicitud
-                    return <CancelFriendRequestButton idFriendship={friendshipProfileUser.id} textButton="Cancelar solicitud"></CancelFriendRequestButton>
+                    return <CancelFriendRequestButton idFriendship={friendshipProfileUser.id.toString()} textButton="Cancelar solicitud"></CancelFriendRequestButton>
                 } else {
                     // Si el usuario actual es quien recibió la solicitud
                     // osea si no es el user_id , entonces sera el friendId
                     return (
                         <div className="flex gap-2">
-                            <ConfirmFriendRequestButton idFriendship={friendshipProfileUser.id}></ConfirmFriendRequestButton>
-                            <CancelFriendRequestButton idFriendship={friendshipProfileUser.id} textButton="Eliminar solicitud"></CancelFriendRequestButton>
+                            <ConfirmFriendRequestButton idFriendship={friendshipProfileUser.id.toString()}></ConfirmFriendRequestButton>
+                            <CancelFriendRequestButton idFriendship={friendshipProfileUser.id.toString()} textButton="Eliminar solicitud"></CancelFriendRequestButton>
                         </div>
                     );
                 }
@@ -71,13 +74,15 @@ export default function ProfileView() {
                 return (
                     <div className='flex gap-2'>
                         <div className="flex gap-2 w-fit px-4 py-2 bg-[#1877f2] text-white rounded-lg">Amigos</div>
-                        <CancelFriendRequestButton idFriendship={friendshipProfileUser.id} textButton="Eliminar de amigos"></CancelFriendRequestButton>
+                        <CancelFriendRequestButton idFriendship={friendshipProfileUser.id.toString()} textButton="Eliminar de amigos"></CancelFriendRequestButton>
                     </div>
                 )
 
 
         }
     };
+
+    if (isLoadingUser || isLoadingFriendship) return <div>Cargando perfil</div>
 
     return (
         <div className="min-h-screen bg-[#F0F2F5]">
@@ -107,7 +112,6 @@ export default function ProfileView() {
                                 </div>
                                 <div className="flex items-center gap-3">
                                     {renderFriendshipActions()}
-
                                 </div>
                             </div>
                         </div>
@@ -127,13 +131,16 @@ export default function ProfileView() {
                     <ProfilePost></ProfilePost>
                 }
                 {profileSection === 'Amigos' &&
-                    <ProfileFriends userId={finalProfileUser.id!}></ProfileFriends>
+                    <>
+                        {<ProfileFriends userId={finalProfileUser!.id.toString()}></ProfileFriends>}
+                    </>
+
                 }
                 {profileSection === 'Informacion' &&
                     <ProfileAbout></ProfileAbout>
                 }
-                
-                       
+
+
             </div>
         </div >
     )
