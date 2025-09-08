@@ -9,13 +9,10 @@ import React, { useState } from 'react'
 import type { postDataItemType } from '../../types';
 import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deletePost } from '../../api/postApi';
-import { queryClient } from '../../main';
 import { useParams } from 'react-router';
 import { useUserStore } from '../../userStore';
-import { toast } from 'react-toastify';
 import EditPostModal from './EditPostModal';
+import DeletePostModal from './DeletePostModal';
 
 type PostItemProps = {
     post: postDataItemType;
@@ -38,23 +35,6 @@ export default function PostItem({ post }: PostItemProps) {
         setCurrentPostId(null);
     };
 
-    const deleteMutation = useMutation({
-        mutationFn: deletePost,
-        onSuccess: () => {
-            handleClose()
-            queryClient.invalidateQueries({ queryKey: ['posts', userId] })
-            toast.success("Publicacion eliminada correctamente")
-        }
-    })
-
-    const handleDeletePost = () => {
-        deleteMutation.mutate(post.id.toString())
-        handleClose()
-    }
-
-    if (deleteMutation.isPending) return (
-        <p>Eliminando publicacion</p>
-    )
     return (
         <>
             <Card key={post.id} sx={{ width: 400 }}>
@@ -98,13 +78,9 @@ export default function PostItem({ post }: PostItemProps) {
                     }}
                 >
                     <EditPostModal post={post} />
-                    <MenuItem sx={{ color: 'red' }} onClick={handleDeletePost}>
-                        Eliminar publicacion
-                    </MenuItem>
+                    <DeletePostModal post={post} />
                 </Menu>
             </Card>
         </>
     )
 }
-
-
