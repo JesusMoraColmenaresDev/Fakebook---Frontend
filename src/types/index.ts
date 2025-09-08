@@ -37,17 +37,20 @@ export const friendshipData = z.object({
 
 export const postData = z.object({
     id: z.number(),
-    user_id : z.number(),
-    content : z.string(),
-    post_picture : z.string()
+    user_id: z.number(),
+    content: z.string(),
+    post_picture: z.string(),
+    user: userDataForItems
 })
 
 export const postDataArray = z.array(postData)
 
 export const postDataForm = z.object({
-    content : z.string(),
-    post_picture : z.string()
+    content: z.string(),
+    post_picture: z.string()
 })
+
+
 
 
 export const friendshipDataArray = z.array(friendshipData)
@@ -62,9 +65,16 @@ export type userDataArrayType = z.infer<typeof userDataArray>
 export type userDataForItemsArrayType = z.infer<typeof userDataForItemsArray>
 export type userDataForItemsType = z.infer<typeof userDataForItems>
 export type postDataFormType = z.infer<typeof postDataForm>
+export type postDataItemType = z.infer<typeof postData>
 
 
 
+export type postEditDataType = {
+    postId: string,
+    content: postDataItemType['content']
+    post_picture: postDataItemType['post_picture']
+
+}
 
 
 export type LoginForm = {

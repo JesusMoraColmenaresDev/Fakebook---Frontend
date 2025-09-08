@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query"
-import { postDataArray, type postDataFormType } from "../types"
+import { postData, postDataArray, type postDataFormType, type postDataItemType, type postEditDataType } from "../types"
 import { api } from "./apiConfig"
 
 
@@ -16,6 +16,24 @@ export const createPost = async ({content, post_picture} : postDataFormType) => 
     if(response.success){
         return response.data
     }
+}
+
+export const editPost = async ({postId , content, post_picture} : postEditDataType) => {
+    const { data } = await api.patch("/posts/" + postId, {
+        post: {
+            content: content,
+            post_picture: post_picture
+        }
+    })
+
+    const response = postData.safeParse(data)
+    if (response.success) return response.data;
+
+}
+
+export const deletePost = async(postId: string) => {
+    const response = await api.delete("/posts/" + postId)
+    return response.data
 }
 
 export const getUserPosts = async (userId : string) => {

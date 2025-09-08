@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { generateColorFromText } from "../../utils/colorsUtil";
 import type { userDataForItemsType } from "../../types";
+import Avatar from "@mui/material/Avatar";
 
 
 export default function UserProfileItem({ id, name, last_name }: userDataForItemsType) {
@@ -12,9 +13,7 @@ export default function UserProfileItem({ id, name, last_name }: userDataForItem
       className="flex w-full items-center p-2 rounded-lg hover:bg-gray-200 transition-colors duration-200"
     >
       {/*foto de perfil temporal*/}
-      <div className={`w-16 h-16 rounded-full mr-3 flex items-center justify-center text-white`} style={{ backgroundColor: colorProfileImage }}>
-        {name.split(" ")[0][0].toUpperCase()}
-      </div>
+      <Avatar sx = {{height : 48, width :48, marginRight : 1}}>{name[0].toUpperCase() + last_name[0].toUpperCase()}</Avatar>
       {/*<img
         src={profilePictureUrl}
         alt={`Foto de perfil de ${name}`}

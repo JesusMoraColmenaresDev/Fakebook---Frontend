@@ -17,6 +17,7 @@ import ProfileFriends from '../components/profile/ProfileFriends'
 import ProfileAbout from '../components/profile/ProfileAbout'
 import CreatePostModal from '../components/post/CreatePostModal'
 import Box from '@mui/material/Box'
+import Avatar from '@mui/material/Avatar'
 
 export default function ProfileView() {
     const { userId } = useParams<{ userId: string }>()
@@ -108,9 +109,7 @@ export default function ProfileView() {
                             }
 
                             {finalProfileUser &&
-                                <div className={`w-[120px] h-[100px] rounded-full text-4xl p-2 flex items-center justify-center text-white`} style={{ backgroundColor: generateColorFromText(finalProfileUser.name) }}>
-                                    {finalProfileUser.name.split(" ")[0][0].toUpperCase()}
-                                </div>
+                                <Avatar  sx={{ width: 120, height: 100, fontSize: '3rem' }}>{finalProfileUser.name[0].toUpperCase()}</Avatar>
                             }
                             {/* Profile Details */}
                             <div className="flex justify-between w-full h-full">
