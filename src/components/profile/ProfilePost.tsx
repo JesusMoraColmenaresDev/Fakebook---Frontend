@@ -12,8 +12,6 @@ type ProfilePostType = {
 
 export default function ProfilePost({ userId }: ProfilePostType) {
   const { posts, isLoadingPosts, postsError } = usegetUserPosts(userId)
-
-  // --- Lógica para el menú ---
  
 
   if (isLoadingPosts) return <Typography sx={{ mt: 2, textAlign: 'center' }}>Cargando publicaciones...</Typography>

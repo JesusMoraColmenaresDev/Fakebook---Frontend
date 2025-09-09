@@ -36,7 +36,7 @@ export default function PostItem({ post }: PostItemProps) {
 
     return (
         <>
-            <Card key={post.id} sx={{ width: 400 }}>
+            <Card  variant="outlined" key={post.id} sx={{ width: 400 }}>
                 {/* Cabecera del Post */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, pb: 1 }}>
                     <Box>

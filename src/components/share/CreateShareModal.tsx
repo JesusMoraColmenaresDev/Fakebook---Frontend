@@ -6,12 +6,14 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import ShareIcon from '@mui/icons-material/Share';
-import type { postDataItemType } from "../../types";
+import type { postDataItemType, shareDataType } from "../../types";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { useMutation } from "@tanstack/react-query";
 import { createShare } from "../../api/shareApi";
 import { toast } from "react-toastify";
+import { useForm } from "react-hook-form";
+import TextField from "@mui/material/TextField";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -34,11 +36,14 @@ export default function CreateShareModal({ post }: CreateShareModalProps) {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<{ content: string }>();
 
     const shareMutate = useMutation({
-        mutationFn : createShare,
+        mutationFn: createShare,
         onSuccess: () => {
             toast.success("Publicacion compartida")
+            handleClose();
+            reset();
         },
         onError: (error) => {
             console.error("Error al compartir la publicacion:", error);
@@ -46,15 +51,11 @@ export default function CreateShareModal({ post }: CreateShareModalProps) {
         }
     })
 
-    const handleConfirmShare = () => {
-        // Aquí irá la lógica de la mutación para compartir
-        console.log("Compartiendo post:", post.id);
-
+    const onSubmit = (data : {content : string}) => {
         shareMutate.mutate({
-            content : post.content, 
-            post_id : post.id
+            content: data.content,
+            post_id: post.id
         })
-        handleClose();
     };
 
     return (
@@ -68,17 +69,30 @@ export default function CreateShareModal({ post }: CreateShareModalProps) {
                 aria-labelledby="share-post-modal-title"
             >
                 <Box sx={style}>
-                    <Typography id="share-post-modal-title" variant="h6" component="h2" sx={{ textAlign: 'center', mb: 2 }}>
-                        ¿Quieres compartir esta publicación?
-                    </Typography>
-                    <Card variant="outlined" sx={{ mb: 3 }}>
-                        <CardContent>
-                            <Typography variant="body2">{post.content}</Typography>
-                        </CardContent>
-                    </Card>
-                    <Stack direction="row" spacing={2} justifyContent="flex-end">
-                        <Button variant="contained" onClick={handleConfirmShare} disabled={shareMutate.isPending} >Compartir</Button>
-                    </Stack>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <Typography id="share-post-modal-title" variant="h6" component="h2" sx={{ textAlign: 'center', mb: 2 }}>
+                            ¿Quieres compartir esta publicación?
+                        </Typography>
+                        <TextField
+                            placeholder="Añade un comentario..."
+                            multiline
+                            rows={2}
+                            fullWidth
+                            {...register("content", { required: "El contenido no puede estar vacío" })}
+                            error={!!errors.content}
+                            helperText={errors.content?.message}
+                            sx={{ mb: 2 }}
+                            autoFocus
+                        />
+                        <Card variant="outlined" sx={{ mb: 3 }}>
+                            <CardContent>
+                                <Typography variant="body2">{post.content}</Typography>
+                            </CardContent>
+                        </Card>
+                        <Stack direction="row" spacing={2} justifyContent="flex-end">
+                            <Button type="submit" variant="contained" disabled={shareMutate.isPending} >{shareMutate.isPending ? "Compartiendo..." : "Compartir"}</Button>
+                        </Stack>
+                    </form>
                 </Box>
             </Modal>
         </>
