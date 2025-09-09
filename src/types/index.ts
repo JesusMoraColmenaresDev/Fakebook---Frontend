@@ -110,6 +110,12 @@ export type postEditDataType = {
 
 }
 
+export type shareEditDataType = {
+    shareId: string,
+    content: shareDataTypeForItems['content']
+}
+
+
 
 export type LoginForm = {
     email: string,

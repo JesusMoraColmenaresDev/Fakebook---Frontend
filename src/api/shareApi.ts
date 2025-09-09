@@ -1,4 +1,4 @@
-import { shareData, shareDataForItems, type shareDataType } from "../types"
+import { shareData, shareDataForItems, type shareDataType, type shareEditDataType } from "../types"
 import { api } from "./apiConfig"
 
 export const createShare = async ({ content, post_id }: shareDataType) => {
@@ -17,7 +17,20 @@ export const createShare = async ({ content, post_id }: shareDataType) => {
     return data
 }
 
-export const getShares = async (userId : string) => {
-    
+
+
+export const updateShare = async ({shareId , content} : shareEditDataType) => {
+    const { data } = await api.patch("/shares/" + shareId, {
+        share: {
+            content: content
+        }
+    })
+
+    const response = shareDataForItems.safeParse(data)
+    if (response.success) return response.data
 }
 
+export const deleteShare = async (shareId: string) => {
+    const response = await api.delete("/shares/" + shareId)
+    return response.data
+}

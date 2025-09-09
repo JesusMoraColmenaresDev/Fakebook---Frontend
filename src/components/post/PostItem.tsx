@@ -13,6 +13,7 @@ import { useUserStore } from '../../userStore';
 import EditPostModal from './EditPostModal';
 import DeletePostModal from './DeletePostModal';
 import CreateShareModal from '../share/CreateShareModal';
+import { stringAvatar } from '../../utils/colorsUtil';
 
 type PostItemProps = {
     post: postDataItemType;
@@ -34,14 +35,15 @@ export default function PostItem({ post }: PostItemProps) {
 
     };
 
+
     return (
         <>
-            <Card  variant="outlined" key={post.id} sx={{ width: 400 }}>
+            <Card variant="outlined" key={post.id} sx={{ width: 400 }}>
                 {/* Cabecera del Post */}
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, pb: 1 }}>
-                    <Box>
-                        <Avatar>{post.user.name[0].toUpperCase()}</Avatar>
-                        <Typography variant="h6" component="div">
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                        <Avatar {...stringAvatar(post.user.name + " " + post.user.last_name)}></Avatar>
+                        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
                             {post.user.name} {post.user.last_name}
                         </Typography>
                     </Box>

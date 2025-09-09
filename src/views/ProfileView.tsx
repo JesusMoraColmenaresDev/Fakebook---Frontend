@@ -5,7 +5,6 @@ import { useUserStore } from '../userStore'
 import { isAxiosError } from 'axios'
 import { api } from '../api/apiConfig'
 import EditProfileButton from '../components/profile/EditProfileButton'
-import { generateColorFromText } from '../utils/colorsUtil'
 import FriendRequestButton from '../components/friendships/FriendRequestButton'
 import { getUserById, useGetUserById } from '../api/userApi'
 import { getFriendship, useGetFriendship } from '../api/friendshipApi'
@@ -18,6 +17,7 @@ import ProfileAbout from '../components/profile/ProfileAbout'
 import CreatePostModal from '../components/post/CreatePostModal'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
+import { stringAvatar } from '../utils/colorsUtil'
 
 export default function ProfileView() {
     const { userId } = useParams<{ userId: string }>()
@@ -109,7 +109,7 @@ export default function ProfileView() {
                             }
 
                             {finalProfileUser &&
-                                <Avatar  sx={{ width: 120, height: 100, fontSize: '3rem' }}>{finalProfileUser.name[0].toUpperCase()}</Avatar>
+                                <Avatar {...stringAvatar(finalProfileUser.name + " " + finalProfileUser.last_name)}></Avatar>
                             }
                             {/* Profile Details */}
                             <div className="flex justify-between w-full h-full">

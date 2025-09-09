@@ -10,6 +10,9 @@ import { useUserStore } from '../../userStore'
 import IconButton from '@mui/material/IconButton'
 import { MoreVerticalIcon } from 'lucide-react'
 import Menu from '@mui/material/Menu'
+import { stringAvatar } from '../../utils/colorsUtil'
+import EditShareModal from './EditShareModal'
+import DeleteShareModal from './DeleteShareModal'
 
 type ShareItemProps = {
     share: shareDataTypeForItems;
@@ -34,9 +37,9 @@ export default function ShareItem({ share }: ShareItemProps) {
         <Card variant="outlined" key={share.id} sx={{ width: 400 }}>
             {/* Cabecera del Share, basada en PostItem */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, pb: 1 }}>
-                <Box>
-                    <Avatar>{share.user.name[0].toUpperCase()}</Avatar>
-                    <Typography variant="h6" component="div">
+                <Box sx={{ display: 'flex', gap: 1 , alignItems : 'center'}}>
+                    <Avatar {...stringAvatar(share.user.name + " " + share.user.last_name)}></Avatar>
+                    <Typography variant="h6" component="div" sx={{fontWeight: 'bold'}}>
                         {share.user.name} {share.user.last_name} 
                     </Typography>
                     <Typography>
@@ -82,8 +85,8 @@ export default function ShareItem({ share }: ShareItemProps) {
                     },
                 }}
             >
-                {/* Como se solicitó, este menú está vacío. 
-                    Aquí podrían ir opciones como "Eliminar share". */}
+                <EditShareModal share={share} />
+                <DeleteShareModal share={share} />
             </Menu>
         </Card>
     )
