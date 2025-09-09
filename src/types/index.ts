@@ -50,6 +50,11 @@ export const postDataForm = z.object({
     post_picture: z.string()
 })
 
+export const shareData = z.object({
+    content : z.string(),
+    post_id : z.number()
+})
+
 
 
 
@@ -66,6 +71,8 @@ export type userDataForItemsArrayType = z.infer<typeof userDataForItemsArray>
 export type userDataForItemsType = z.infer<typeof userDataForItems>
 export type postDataFormType = z.infer<typeof postDataForm>
 export type postDataItemType = z.infer<typeof postData>
+export type shareDataType = z.infer<typeof shareData>
+
 
 
 

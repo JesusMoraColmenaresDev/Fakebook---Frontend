@@ -7,12 +7,12 @@ import Typography from '@mui/material/Typography';
 import { MoreVerticalIcon } from 'lucide-react';
 import React, { useState } from 'react'
 import type { postDataItemType } from '../../types';
-import MenuItem from '@mui/material/MenuItem';
 import Box from '@mui/material/Box';
 import { useParams } from 'react-router';
 import { useUserStore } from '../../userStore';
 import EditPostModal from './EditPostModal';
 import DeletePostModal from './DeletePostModal';
+import CreateShareModal from '../share/CreateShareModal';
 
 type PostItemProps = {
     post: postDataItemType;
@@ -20,19 +20,18 @@ type PostItemProps = {
 
 export default function PostItem({ post }: PostItemProps) {
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-    const [currentPostId, setCurrentPostId] = useState<null | number>(null);
     const open = Boolean(anchorEl);
     const { userId } = useParams<{ userId: string }>();
     const { currentUser } = useUserStore()
 
 
-    const handleClick = (event: React.MouseEvent<HTMLElement>, postId: number) => {
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
-        setCurrentPostId(postId);
+
     };
     const handleClose = () => {
         setAnchorEl(null);
-        setCurrentPostId(null);
+
     };
 
     return (
@@ -46,15 +45,19 @@ export default function PostItem({ post }: PostItemProps) {
                             {post.user.name} {post.user.last_name}
                         </Typography>
                     </Box>
-                    {/* --- Botón del Menú --- */}
-                    {currentUser!.id === post.user.id && (
-                        <IconButton
-                            aria-label="more"
-                            onClick={(e) => handleClick(e, post.id)}
-                        >
-                            <MoreVerticalIcon />
-                        </IconButton>
-                    )}
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        {/* --- Botón del Menú (solo para el dueño) --- */}
+                        {currentUser!.id === post.user.id && (
+                            <IconButton
+                                aria-label="more"
+                                onClick={handleClick}
+                            >
+                                <MoreVerticalIcon />
+                            </IconButton>
+                        )}
+                        {/* --- Botón de Compartir (para todos) --- */}
+                        <CreateShareModal post={post} />
+                    </Box>
 
                 </Box>
 
@@ -69,7 +72,7 @@ export default function PostItem({ post }: PostItemProps) {
 
                 <Menu
                     anchorEl={anchorEl}
-                    open={open && currentPostId === post.id}
+                    open={open}
                     onClose={handleClose}
                     slotProps={{
                         paper: {
@@ -80,6 +83,8 @@ export default function PostItem({ post }: PostItemProps) {
                     <EditPostModal post={post} />
                     <DeletePostModal post={post} />
                 </Menu>
+
+
             </Card>
         </>
     )
