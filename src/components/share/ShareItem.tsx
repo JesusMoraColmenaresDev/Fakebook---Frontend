@@ -13,6 +13,9 @@ import Menu from '@mui/material/Menu'
 import { stringAvatar } from '../../utils/colorsUtil'
 import EditShareModal from './EditShareModal'
 import DeleteShareModal from './DeleteShareModal'
+import { Link } from 'react-router'
+import { Button, Divider } from '@mui/material'
+import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 type ShareItemProps = {
     share: shareDataTypeForItems;
@@ -74,6 +77,15 @@ export default function ShareItem({ share }: ShareItemProps) {
                 <PostItem post={share.post} />
             </Box>
 
+            {/* --- Sección de Acciones --- */}
+            <Divider />
+            <Box sx={{ p: 1, display: 'flex', justifyContent: 'center' }}>
+                <Link to={`/shares/${share.id}/comments`} style={{ textDecoration: 'none', width: '100%' }}>
+                    <Button startIcon={<ChatBubbleOutlineIcon />} fullWidth sx={{ color: 'text.secondary', '&:hover': { bgcolor: 'action.hover' } }}>
+                        Ver Comentarios
+                    </Button>
+                </Link>
+            </Box>
             {/* --- Componente del Menú para el Share --- */}
             <Menu
                 anchorEl={anchorEl}

@@ -15,6 +15,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import ProfileFriends from "./components/profile/ProfileFriends";
 import ProfileAbout from "./components/profile/ProfileAbout";
 import ProfilePost from "./components/profile/ProfilePost";
+import CommentsView from "./views/CommentsView";
 
 
 
@@ -43,6 +44,12 @@ const router = createBrowserRouter([
         path: "/profile/:userId",
         element: <ProfileView></ProfileView>,
         loader: isNotLogin,
+      },
+      {
+        // Esta ruta captura tanto /posts/:id/comments como /shares/:id/comments
+        path: "/:type/:id/comments",
+        element: <CommentsView />,
+        loader: isNotLogin
       }
     ]
   }

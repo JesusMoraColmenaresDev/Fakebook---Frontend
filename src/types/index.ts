@@ -51,40 +51,57 @@ export const postDataForm = z.object({
 })
 
 export const shareData = z.object({
-    content : z.string(),
-    post_id : z.number()
+    content: z.string(),
+    post_id: z.number()
 })
 
+// Este es el esquema que realmente representa un 'share' cuando lo obtenemos de la API
 export const shareDataForItems = z.object({
     id: z.number(),
     content: z.string(),
-    post : postData,
-    user : userDataForItems
+    post: postData,
+    user: userDataForItems
 })
 
 export const friendshipDataArray = z.array(friendshipData)
 
 // 1. Define el "contenedor" para un item de tipo Post
 const PostFeedItemSchema = z.object({
-  type: z.literal('post'),
-  created_at: z.string().datetime(),
-  data: postData, // Usa el esquema de Post que definimos arriba
+    type: z.literal('post'),
+    created_at: z.string().datetime(),
+    data: postData, // Usa el esquema de Post que definimos arriba
 });
 
 // 2. Define el "contenedor" para un item de tipo Share
 const ShareFeedItemSchema = z.object({
-  type: z.literal('share'),
-  created_at: z.string().datetime(),
-  data: shareDataForItems, // Usa el esquema de Share que definimos arriba
+    type: z.literal('share'),
+    created_at: z.string().datetime(),
+    data: shareDataForItems, // Usa el esquema de Share que definimos arriba
 });
 
 export const FeedItemSchema = z.discriminatedUnion('type', [
-  PostFeedItemSchema,
-  ShareFeedItemSchema,
+    PostFeedItemSchema,
+    ShareFeedItemSchema,
 ]);
+
+export const CommentData = z.object({
+    id: z.number(),
+    content: z.string(),
+    // El campo polimórfico que puede ser 'Post' o 'Share'
+    commentable_type: z.union([
+        z.literal('Post'),
+        z.literal('Share')
+    ]),
+
+    // El ID del objeto al que pertenece el comentario
+    commentable_id: z.number(),
+    // El usuario anidado
+    user: userDataForItems,
+});
 
 // 4. El esquema final para la respuesta completa de la API es un array de estos items
 export const FeedResponseSchema = z.array(FeedItemSchema);
+export const CommentDataArray = z.array(CommentData);
 
 
 export type userDataFormType = z.infer<typeof registerDataForm>
@@ -98,8 +115,12 @@ export type postDataFormType = z.infer<typeof postDataForm>
 export type postDataItemType = z.infer<typeof postData>
 export type shareDataType = z.infer<typeof shareData>
 export type shareDataTypeForItems = z.infer<typeof shareDataForItems>
+
 export type FeedItemType = z.infer<typeof FeedItemSchema>;
 export type FeedResponseType = z.infer<typeof FeedResponseSchema>;
+export type CommentDataArrayType = z.infer<typeof CommentDataArray>;
+export type CommentDataType = z.infer<typeof CommentData>;
+
 
 
 
@@ -113,6 +134,12 @@ export type postEditDataType = {
 export type shareEditDataType = {
     shareId: string,
     content: shareDataTypeForItems['content']
+}
+
+export type CreateCommentType = {
+    type: 'posts' | 'shares';
+    id: string;
+    content: string;
 }
 
 

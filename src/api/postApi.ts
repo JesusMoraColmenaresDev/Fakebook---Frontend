@@ -36,6 +36,12 @@ export const deletePost = async(postId: string) => {
     return response.data
 }
 
+export const getPost = async(postId: string) => {
+    const {data} = await api.get("/posts/" + postId)
+    const response = postData.safeParse(data)
+    if(response.success) return response.data
+}
+
 export const getUserPosts = async (userId : string) => {
     const {data} = await api.get("/posts?user_id=" + userId)
     const response = postDataArray.safeParse(data)
@@ -55,4 +61,18 @@ export const usegetUserPosts = (userId : string) => {
     })
 
     return {posts, isLoadingPosts, postsError}
+}
+
+export const useGetPost = (postId : string) => {
+    const {
+        data: post,
+        isLoading: isLoadingPost,
+        error: postError
+    
+    } = useQuery({
+        queryKey: ['post', postId],
+        queryFn: () => getPost(postId),
+    })
+
+    return {post, isLoadingPost, postError}
 }
