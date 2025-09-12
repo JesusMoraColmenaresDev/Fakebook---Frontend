@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography'
 import { stringAvatar } from '../../utils/colorsUtil'
 import { Link } from 'react-router'
 
-// Usamos `CommentDataArrayType[number]` para referirnos al tipo de un solo comentario del array
 type CommentItemProps = {
     comment: CommentDataType
 }

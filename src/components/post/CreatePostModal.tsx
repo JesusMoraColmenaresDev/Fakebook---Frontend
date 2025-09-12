@@ -39,6 +39,7 @@ export default function CreatePostModal() {
         mutationFn: createPost,
         onSuccess: () => {
             // En caso de éxito, invalidamos la query de los posts para que se actualice la lista
+            queryClient.invalidateQueries({ queryKey: ['feeds'] });
             queryClient.invalidateQueries({ queryKey: ['posts', userId] });
             handleClose(); // Cierra el modal
             reset(); // Limpia el formulario

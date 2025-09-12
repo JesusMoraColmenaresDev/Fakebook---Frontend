@@ -54,6 +54,8 @@ export default function EditPostModal({ post }: EditPostModalProps) {
         mutationFn: editPost,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['posts', userId] });
+            queryClient.invalidateQueries({ queryKey: ['feeds'] });
+            queryClient.invalidateQueries({ queryKey: ['item'] });
             handleClose();
             toast.success("Publicación editada correctamente");
         },

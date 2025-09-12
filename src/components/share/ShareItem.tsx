@@ -13,15 +13,17 @@ import Menu from '@mui/material/Menu'
 import { stringAvatar } from '../../utils/colorsUtil'
 import EditShareModal from './EditShareModal'
 import DeleteShareModal from './DeleteShareModal'
-import { Link } from 'react-router'
+import { Link, useParams } from 'react-router'
 import { Button, Divider } from '@mui/material'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import ShowCommentsButton from '../comments/ShowCommentsButton'
 
 type ShareItemProps = {
     share: shareDataTypeForItems;
 }
 
 export default function ShareItem({ share }: ShareItemProps) {
+    const { type } = useParams<{ type: 'posts' | 'shares' }>()
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const { currentUser } = useUserStore()
@@ -40,15 +42,19 @@ export default function ShareItem({ share }: ShareItemProps) {
         <Card variant="outlined" key={share.id} sx={{ width: 400 }}>
             {/* Cabecera del Share, basada en PostItem */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, pb: 1 }}>
-                <Box sx={{ display: 'flex', gap: 1 , alignItems : 'center'}}>
-                    <Avatar {...stringAvatar(share.user.name + " " + share.user.last_name)}></Avatar>
-                    <Typography variant="h6" component="div" sx={{fontWeight: 'bold'}}>
-                        {share.user.name} {share.user.last_name} 
-                    </Typography>
+                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                    <Link className='flex gap-1 items-center' to={`/profile/${share.user.id}`}>
+                        <Avatar {...stringAvatar(share.user.name + " " + share.user.last_name)}></Avatar>
+                        <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
+                            {share.user.name} {share.user.last_name}
+                        </Typography>
+                    </Link>
                     <Typography>
                         Ha compartido
                     </Typography>
                 </Box>
+
+
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     {/* --- Botón del Menú (solo para el dueño del share) --- */}
                     {currentUser!.id === share.user.id && (
@@ -79,13 +85,12 @@ export default function ShareItem({ share }: ShareItemProps) {
 
             {/* --- Sección de Acciones --- */}
             <Divider />
-            <Box sx={{ p: 1, display: 'flex', justifyContent: 'center' }}>
-                <Link to={`/shares/${share.id}/comments`} style={{ textDecoration: 'none', width: '100%' }}>
-                    <Button startIcon={<ChatBubbleOutlineIcon />} fullWidth sx={{ color: 'text.secondary', '&:hover': { bgcolor: 'action.hover' } }}>
-                        Ver Comentarios
-                    </Button>
-                </Link>
-            </Box>
+
+            {type != 'shares' &&
+                <ShowCommentsButton type='shares' item={share} textButton='del compartido' ></ShowCommentsButton>
+
+            }
+
             {/* --- Componente del Menú para el Share --- */}
             <Menu
                 anchorEl={anchorEl}

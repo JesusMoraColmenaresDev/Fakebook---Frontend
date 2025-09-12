@@ -8,7 +8,7 @@ import MenuItem from '@mui/material/MenuItem';
 import type { postDataItemType } from "../../types";
 import { deletePost } from "../../api/postApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 import { toast } from "react-toastify";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -31,6 +31,8 @@ type DeletePostModalProps = {
 
 export default function DeletePostModal({ post }: DeletePostModalProps) {
     const { userId } = useParams<{ userId: string }>();
+    const location = useLocation()
+    const navigate = useNavigate()
     const queryClient = useQueryClient();
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
@@ -41,6 +43,11 @@ export default function DeletePostModal({ post }: DeletePostModalProps) {
         onSuccess: () => {
             handleClose();
             queryClient.invalidateQueries({ queryKey: ['posts', userId] });
+            queryClient.invalidateQueries({ queryKey: ['feeds'] });
+            queryClient.invalidateQueries({ queryKey: ['item'] });
+            if (location.pathname.includes("/comments")) {
+                navigate("/")
+            }
             toast.success("Publicación eliminada correctamente");
         },
         onError: (error) => {

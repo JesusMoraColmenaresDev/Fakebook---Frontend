@@ -13,6 +13,7 @@ import type { shareDataTypeForItems } from "../../types";
 import { toast } from "react-toastify";
 import { useMutation } from "@tanstack/react-query";
 import { updateShare } from "../../api/shareApi";
+import { queryClient } from "../../main";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -56,6 +57,8 @@ export default function EditShareModal({ share }: EditShareModalProps) {
         mutationFn: updateShare,
         onSuccess: () => {
             toast.success("Compartido editado correctamente")
+            queryClient.invalidateQueries({ queryKey: ['feeds']});
+            queryClient.invalidateQueries({ queryKey: ['item']});
         },
         onError: (error) => {
             console.error("Error al editar el compartido:", error);

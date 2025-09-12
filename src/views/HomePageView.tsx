@@ -4,25 +4,32 @@ import { useNavigate } from 'react-router'
 import UserProfileItem from '../components/profile/UserProfileItem'
 import type { FeedResponseType,userDataForItemsArrayType, userDataType } from '../types'
 import { getAllUsers } from '../api/userApi'
-import { getFeeds } from '../api/feedApi'
+import { getFeeds, useGetFeeds } from '../api/feedApi'
 import PostItem from '../components/post/PostItem'
 import ShareItem from '../components/share/ShareItem'
 import Box from '@mui/material/Box'
+import { CircularProgress } from '@mui/material'
 
 export default function HomePageView() {
   const navigate = useNavigate()
   const [users, setUsers] = useState<userDataForItemsArrayType>([])
-  const [feeds, setFeeds] = useState<FeedResponseType>()
+  const {feeds, isLoadingFeeds, feedsError} = useGetFeeds()
 
   useEffect(() => {
     const getUsers = async () => {
-      const feeds = await getFeeds()
-      setFeeds(feeds)
       const users = await getAllUsers()
       setUsers(users!)
     }
     getUsers()
   }, [])
+
+  if (isLoadingFeeds) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   return (
     <>
@@ -44,7 +51,7 @@ export default function HomePageView() {
           mt: 2
         }}
       >
-        {feeds?.map((feed) => {
+        {feeds!.map((feed) => {
           // El `switch` es la forma más clara y segura de manejar uniones discriminadas.
           // TypeScript sabrá el tipo de `feed.data` dentro de cada `case`.
           switch (feed.type) {

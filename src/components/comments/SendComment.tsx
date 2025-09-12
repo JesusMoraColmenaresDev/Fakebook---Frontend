@@ -9,7 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
 import { toast } from 'react-toastify';
 import { createComment } from '../../api/commentApi';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 type SendCommentProps = {
   type: CreateCommentType['type']
@@ -22,11 +22,13 @@ type FormValues = {
 
 export default function SendComment({ type, id }: SendCommentProps) {
   const { currentUser } = useUserStore();
+  const queryClient = useQueryClient();
   const { register, handleSubmit, reset, formState: { errors, isSubmitting } } = useForm<FormValues>();
 
   const createCommentMutation = useMutation({
     mutationFn: createComment,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['comments', type, id] });
       toast.success("Comentario creado correctamente");
       reset();
     },

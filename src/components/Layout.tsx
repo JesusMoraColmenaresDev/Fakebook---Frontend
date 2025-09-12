@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Outlet, redirect, useNavigate } from "react-router";
-import { api } from "../api/apiConfig";
 import { useUserStore } from "../userStore";
 import { getCurrentUser } from "../api/userApi";
+import { actionCableService } from "../services/actionCableService";
 
 /**
  * Este componente actúa como la raíz de nuestras rutas.
@@ -11,7 +11,7 @@ import { getCurrentUser } from "../api/userApi";
  */
 export default function RootLayout() {
   const [isInitializing, setIsInitializing] = useState(true);
-  const { setCurrentUser } = useUserStore();
+  const { currentUser, setCurrentUser } = useUserStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,9 +34,31 @@ export default function RootLayout() {
     rehydrateUserSession();
   }, []);
 
+  // Efecto para gestionar el ciclo de vida de la conexión de Action Cable.
+  useEffect(() => {
+    if (currentUser) {
+      // Si hay un usuario logueado, establecemos la conexión WebSocket.
+      actionCableService.connect();
+    }
+
+    // La función de limpieza se ejecuta cuando el componente se desmonta
+    // o cuando `currentUser` cambia. Si `currentUser` se vuelve `null` (logout),
+    // la conexión se cerrará.
+    return () => {
+      actionCableService.disconnect();
+    };
+  }, [currentUser]); // Este efecto depende del estado del usuario.
+
   if (isInitializing) {
     return <div className="flex items-center justify-center h-screen bg-gray-100 text-gray-600">Cargando aplicación...</div>;
   }
 
-  return <Outlet />;
+  return (
+    <>
+      <div className="right-0 fixed h-screen">fokin sidebar</div>
+      <Outlet />
+    </>
+
+
+  )
 }  

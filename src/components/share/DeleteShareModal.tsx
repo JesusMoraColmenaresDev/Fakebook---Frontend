@@ -13,7 +13,9 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { useMutation } from "@tanstack/react-query";
 import { deleteShare } from "../../api/shareApi";
-
+import { queryClient } from "../../main";
+import { useNavigate, useParams } from "react-router";
+import { useLocation } from "react-router";
 const style = {
     position: 'absolute' as 'absolute',
     top: '50%',
@@ -31,7 +33,8 @@ type DeleteShareModalProps = {
 }
 
 export default function DeleteShareModal({ share }: DeleteShareModalProps) {
-    // const queryClient = useQueryClient(); // <-- Lo necesitarás para las mutaciones
+    const location = useLocation()
+    const navigate = useNavigate()
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -40,6 +43,11 @@ export default function DeleteShareModal({ share }: DeleteShareModalProps) {
         mutationFn: deleteShare,
         onSuccess: () => {
             toast.success("Compartido eliminado correctamente")
+            queryClient.invalidateQueries({ queryKey: ['feeds'] });
+            queryClient.invalidateQueries({ queryKey: ['item']});
+            if(location.pathname.includes("/comments")) {
+                navigate("/")
+            }
             handleClose(); // Cierro el modal por ahora
         },
         onError: (error) => {

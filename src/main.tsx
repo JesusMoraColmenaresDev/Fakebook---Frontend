@@ -16,6 +16,8 @@ import ProfileFriends from "./components/profile/ProfileFriends";
 import ProfileAbout from "./components/profile/ProfileAbout";
 import ProfilePost from "./components/profile/ProfilePost";
 import CommentsView from "./views/CommentsView";
+import ConversationsListView from "./views/ConversationsListView";
+import ConversationView from "./views/ConversationView";
 
 
 
@@ -50,6 +52,16 @@ const router = createBrowserRouter([
         path: "/:type/:id/comments",
         element: <CommentsView />,
         loader: isNotLogin
+      },
+      {
+        path: "/conversations",
+        element: <ConversationsListView></ConversationsListView>,
+        loader: isNotLogin,
+      },
+      {
+        path: "/conversation/:conversationId",
+        element: <ConversationView></ConversationView>,
+        loader: isNotLogin,
       }
     ]
   }

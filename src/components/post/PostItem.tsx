@@ -14,15 +14,17 @@ import EditPostModal from './EditPostModal';
 import DeletePostModal from './DeletePostModal';
 import CreateShareModal from '../share/CreateShareModal';
 import { stringAvatar } from '../../utils/colorsUtil';
-import { Link } from 'react-router';
+import { Link, useParams } from 'react-router';
 import { Button, Divider } from '@mui/material';
-import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import ShowCommentsButton from '../comments/ShowCommentsButton';
+
 
 type PostItemProps = {
     post: postDataItemType;
 }
 
 export default function PostItem({ post }: PostItemProps) {
+    const { type } = useParams<{ type: 'posts' | 'shares' }>()
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const { currentUser } = useUserStore()
@@ -42,12 +44,13 @@ export default function PostItem({ post }: PostItemProps) {
         <Card variant="outlined" sx={{ width: 400 }}>
             {/* Cabecera del Post */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, pb: 1 }}>
-                <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+                <Link className='flex gap-1 items-center' to={`/profile/${post.user.id}`}>
                     <Avatar {...stringAvatar(post.user.name + " " + post.user.last_name)}></Avatar>
                     <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
                         {post.user.name} {post.user.last_name}
                     </Typography>
-                </Box>
+                </Link>
+
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
                     {/* --- Botón de Compartir (para todos) --- */}
                     <CreateShareModal post={post} />
@@ -72,13 +75,12 @@ export default function PostItem({ post }: PostItemProps) {
 
             {/* --- Sección de Acciones --- */}
             <Divider />
-            <Box sx={{ p: 1, display: 'flex', justifyContent: 'center' }}>
-                <Link to={`/posts/${post.id}/comments`} style={{ textDecoration: 'none', width: '100%' }}>
-                    <Button startIcon={<ChatBubbleOutlineIcon />} fullWidth sx={{ color: 'text.secondary', '&:hover': { bgcolor: 'action.hover' } }}>
-                        Ver Comentarios
-                    </Button>
-                </Link>
-            </Box>
+
+            {/* Esto es para que cuando entremos a la vista de los comments , si entramos a los comentarios del post , se desaparezca el boton de llevar a los comentarios de ese post porque ya estamos ahi */}
+
+            {type != 'posts' &&
+                <ShowCommentsButton type='posts' item={post} textButton='de la publicacion' ></ShowCommentsButton>
+            }
 
             {/* --- Componente del Menú --- */}
             <Menu

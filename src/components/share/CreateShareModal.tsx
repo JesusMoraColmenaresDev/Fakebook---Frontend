@@ -14,6 +14,7 @@ import { createShare } from "../../api/shareApi";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import TextField from "@mui/material/TextField";
+import { queryClient } from "../../main";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -41,6 +42,7 @@ export default function CreateShareModal({ post }: CreateShareModalProps) {
     const shareMutate = useMutation({
         mutationFn: createShare,
         onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['feeds'] });
             toast.success("Publicacion compartida")
             handleClose();
             reset();

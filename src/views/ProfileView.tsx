@@ -18,6 +18,7 @@ import CreatePostModal from '../components/post/CreatePostModal'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import { stringAvatar } from '../utils/colorsUtil'
+import ButtonSendMessage from '../components/profile/ButtonSendMessage'
 
 export default function ProfileView() {
     const { userId } = useParams<{ userId: string }>()
@@ -44,7 +45,7 @@ export default function ProfileView() {
         if (isMyProfile) {
             return (
                 <div className='flex gap-4'>
-                    <EditProfileButton/>
+                    <EditProfileButton />
                     <CreatePostModal></CreatePostModal>
                 </div>
 
@@ -54,7 +55,11 @@ export default function ProfileView() {
         // Si no hay una relación de amistad, mostramos el botón para enviar solicitud
         if (!friendshipProfileUser) {
             if (finalProfileUser) {
-                return <FriendRequestButton idProfile={finalProfileUser.id.toString()} textButton={"Agregar amigo"} />;
+                return <div className='flex gap-2'>
+                    <FriendRequestButton idProfile={finalProfileUser.id.toString()} textButton={"Agregar amigo"} />
+                    <ButtonSendMessage userReceiverId={finalProfileUser!.id.toString()} />
+
+                </div>;
             }
             return null;
         }
@@ -67,7 +72,13 @@ export default function ProfileView() {
                 // Si el usuario actual es quien envió la solicitud
                 if (currentUserId === user_id.toString()) {
                     // TODO: Implementar la lógica para cancelar la solicitud
-                    return <CancelFriendRequestButton idFriendship={friendshipProfileUser.id.toString()} textButton="Cancelar solicitud"></CancelFriendRequestButton>
+                    return (
+                        <div className='flex gap-2'>
+                            <CancelFriendRequestButton idFriendship={friendshipProfileUser.id.toString()} textButton="Cancelar solicitud"></CancelFriendRequestButton>
+                            <ButtonSendMessage userReceiverId={finalProfileUser!.id.toString()} />
+                        </div>
+                    )
+
                 } else {
                     // Si el usuario actual es quien recibió la solicitud
                     // osea si no es el user_id , entonces sera el friendId
@@ -75,6 +86,8 @@ export default function ProfileView() {
                         <div className="flex gap-2">
                             <ConfirmFriendRequestButton idFriendship={friendshipProfileUser.id.toString()}></ConfirmFriendRequestButton>
                             <CancelFriendRequestButton idFriendship={friendshipProfileUser.id.toString()} textButton="Eliminar solicitud"></CancelFriendRequestButton>
+                            <ButtonSendMessage userReceiverId={finalProfileUser!.id.toString()} />
+
                         </div>
                     );
                 }
@@ -84,6 +97,7 @@ export default function ProfileView() {
                     <div className='flex gap-2'>
                         <Box className="flex gap-2 w-fit px-4 py-2 bg-[#1877f2] text-white rounded-lg">Amigos</Box>
                         <CancelFriendRequestButton idFriendship={friendshipProfileUser.id.toString()} textButton="Eliminar de amigos"></CancelFriendRequestButton>
+                        <ButtonSendMessage userReceiverId={finalProfileUser!.id.toString()} />
                     </div>
                 )
 
