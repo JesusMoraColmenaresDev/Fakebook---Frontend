@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-const registerDataForm = z.object({
+// --- User Schemas ---
+export const RegisterFormSchema = z.object({
     name: z.string(),
     last_name: z.string(),
     email: z.string().email(),
@@ -8,132 +9,141 @@ const registerDataForm = z.object({
     birthday_day: z.string(),
     birthday_month: z.string(),
     birthday_year: z.string()
-})
+});
 
-export const userData = z.object({
+export const UserSchema = z.object({
     id: z.number(),
     name: z.string(),
     last_name: z.string(),
     email: z.string().email(),
     birthday: z.string()
-})
+});
 
-export const userDataForItems = z.object({
+export const UserItemSchema = z.object({
     id: z.number(),
     name: z.string(),
     last_name: z.string(),
-})
+});
 
-export const userDataForItemsArray = z.array(userDataForItems)
+export const UserItemArraySchema = z.array(UserItemSchema);
+export const UserArraySchema = z.array(UserSchema);
 
-export const userDataArray = z.array(userData)
-
-export const friendshipData = z.object({
+// --- Friendship Schemas ---
+export const FriendshipSchema = z.object({
     id: z.number(),
     friend_id: z.number(),
     user_id: z.number(),
     status: z.string()
-})
+});
 
-export const postData = z.object({
+export const FriendshipArraySchema = z.array(FriendshipSchema);
+
+// --- Post Schemas ---
+export const PostSchema = z.object({
     id: z.number(),
     content: z.string(),
     post_picture: z.string(),
-    user: userDataForItems
-})
+    user: UserItemSchema
+});
 
+export const PostArraySchema = z.array(PostSchema);
 
-export const postDataArray = z.array(postData)
-
-export const postDataForm = z.object({
+export const PostFormSchema = z.object({
     content: z.string(),
     post_picture: z.string()
-})
+});
 
-export const shareData = z.object({
+// --- Share Schemas ---
+export const ShareFormSchema = z.object({
     content: z.string(),
     post_id: z.number()
-})
+});
 
-// Este es el esquema que realmente representa un 'share' cuando lo obtenemos de la API
-export const shareDataForItems = z.object({
+export const ShareSchema = z.object({
     id: z.number(),
     content: z.string(),
-    post: postData,
-    user: userDataForItems
-})
+    post: PostSchema,
+    user: UserItemSchema
+});
 
-export const friendshipDataArray = z.array(friendshipData)
-
-// 1. Define el "contenedor" para un item de tipo Post
+// --- Feed Schemas ---
 const PostFeedItemSchema = z.object({
     type: z.literal('post'),
     created_at: z.string().datetime(),
-    data: postData, // Usa el esquema de Post que definimos arriba
+    data: PostSchema,
 });
 
-// 2. Define el "contenedor" para un item de tipo Share
 const ShareFeedItemSchema = z.object({
     type: z.literal('share'),
     created_at: z.string().datetime(),
-    data: shareDataForItems, // Usa el esquema de Share que definimos arriba
+    data: ShareSchema,
 });
 
 export const FeedItemSchema = z.discriminatedUnion('type', [
     PostFeedItemSchema,
     ShareFeedItemSchema,
 ]);
+export const FeedResponseSchema = z.array(FeedItemSchema);
 
-export const CommentData = z.object({
+// --- Comment Schemas ---
+export const CommentSchema = z.object({
     id: z.number(),
     content: z.string(),
-    // El campo polimórfico que puede ser 'Post' o 'Share'
-    commentable_type: z.union([
-        z.literal('Post'),
-        z.literal('Share')
-    ]),
-
-    // El ID del objeto al que pertenece el comentario
+    commentable_type: z.union([z.literal('Post'), z.literal('Share')]),
     commentable_id: z.number(),
-    // El usuario anidado
-    user: userDataForItems,
+    user: UserItemSchema,
 });
-
-// 4. El esquema final para la respuesta completa de la API es un array de estos items
-export const FeedResponseSchema = z.array(FeedItemSchema);
-export const CommentDataArray = z.array(CommentData);
+export const CommentArraySchema = z.array(CommentSchema);
 
 
-export type userDataFormType = z.infer<typeof registerDataForm>
-export type userDataType = z.infer<typeof userData>
-export type friendshipDataType = z.infer<typeof friendshipData>
-export type AllfriendshipDataType = userDataType[]
-export type userDataArrayType = z.infer<typeof userDataArray>
-export type userDataForItemsArrayType = z.infer<typeof userDataForItemsArray>
-export type userDataForItemsType = z.infer<typeof userDataForItems>
-export type postDataFormType = z.infer<typeof postDataForm>
-export type postDataItemType = z.infer<typeof postData>
-export type shareDataType = z.infer<typeof shareData>
-export type shareDataTypeForItems = z.infer<typeof shareDataForItems>
+// --- Message Schemas (centralized from conversationApi) ---
+export const MessageSchema = z.object({
+    id: z.number(),
+    content: z.string(),
+    user_id: z.number(),
+    created_at: z.string(),
+    user: UserItemSchema,
+});
+export const MessageArraySchema = z.array(MessageSchema);
 
+// --- Conversation Schemas ---
+export const ConversationSchema = z.object({
+  id: z.number(),
+  sender_id: z.number(),
+  receiver_id: z.number(),
+  created_at: z.string(),
+  updated_at: z.string(),
+});
+export const ConversationArraySchema = z.array(ConversationSchema);
+
+// --- TypeScript Types ---
+export type RegisterFormType = z.infer<typeof RegisterFormSchema>;
+export type UserType = z.infer<typeof UserSchema>;
+export type UserItemType = z.infer<typeof UserItemSchema>;
+export type UserArrayType = z.infer<typeof UserArraySchema>;
+export type UserItemArrayType = z.infer<typeof UserItemArraySchema>;
+export type FriendshipType = z.infer<typeof FriendshipSchema>;
+export type PostType = z.infer<typeof PostSchema>;
+export type PostFormType = z.infer<typeof PostFormSchema>;
+export type ShareFormType = z.infer<typeof ShareFormSchema>;
+export type ShareType = z.infer<typeof ShareSchema>;
 export type FeedItemType = z.infer<typeof FeedItemSchema>;
 export type FeedResponseType = z.infer<typeof FeedResponseSchema>;
-export type CommentDataArrayType = z.infer<typeof CommentDataArray>;
-export type CommentDataType = z.infer<typeof CommentData>;
+export type CommentType = z.infer<typeof CommentSchema>;
+export type CommentArrayType = z.infer<typeof CommentArraySchema>;
+export type MessageType = z.infer<typeof MessageSchema>;
+export type ConversationType = z.infer<typeof ConversationSchema>;
 
-
-
-
-export type postEditDataType = {
+// --- Manually Defined Types ---
+export type PostEditType = {
     postId: string,
-    content: postDataItemType['content']
-    post_picture: postDataItemType['post_picture']
-
+    content: PostType['content'],
+    post_picture: PostType['post_picture']
 }
 
-export type shareEditDataType = {
+export type ShareEditType = {
     shareId: string,
-    content: shareDataTypeForItems['content']
+    content: ShareType['content']
 }
 
 export type CreateCommentType = {
@@ -142,9 +152,7 @@ export type CreateCommentType = {
     content: string;
 }
 
-
-
-export type LoginForm = {
+export type LoginFormType = {
     email: string,
     password: string
 }

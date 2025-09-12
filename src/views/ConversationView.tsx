@@ -5,7 +5,8 @@ import { Subscription } from '@rails/actioncable';
 import { Box, TextField, Button, Paper, Typography, CircularProgress, List, ListItem, ListItemText, Avatar } from '@mui/material';
 
 import { actionCableService } from '../services/actionCableService';
-import { useGetMessages, type MessageType } from '../api/conversationApi';
+import { useGetMessages } from '../api/conversationApi';
+import type { MessageType } from '../types';
 import { useUserStore } from '../userStore';
 import { stringAvatar } from '../utils/colorsUtil';
 

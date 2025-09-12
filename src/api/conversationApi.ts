@@ -1,25 +1,16 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "./apiConfig";
-import { z } from "zod";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import { ConversationSchema, MessageArraySchema, type ConversationType, type MessageType } from "../types";
 
-
-// 1. Definimos un esquema para asegurarnos de que la respuesta del servidor tiene la forma que esperamos.
-const conversationSchema = z.object({
-  id: z.number(),
-  sender_id: z.number(),
-  receiver_id: z.number(),
-  created_at: z.string(),
-  updated_at: z.string(),
-});
-
-type ConversationType = z.infer<typeof conversationSchema>;
-
-// 2. Esta es la función que se comunicará con tu backend.
+/**
+ * Llama a la API para crear una nueva conversación o encontrar una existente entre dos usuarios.
+ * @param receiverId El ID del usuario con el que se quiere conversar.
+ */
 export const createOrGetConversation = async (receiverId: string): Promise<ConversationType> => {
   const { data } = await api.post('/conversations', { receiver_id: receiverId });
-  const response = conversationSchema.safeParse(data);
+  const response = ConversationSchema.safeParse(data);
 
   if (!response.success) {
     throw new Error("Los datos recibidos del servidor son inválidos.");
@@ -27,7 +18,9 @@ export const createOrGetConversation = async (receiverId: string): Promise<Conve
   return response.data;
 };
 
-// 3. Creamos el hook de mutación que usaremos en nuestro componente.
+/**
+ * Hook de mutación para crear/obtener una conversación y navegar a ella si tiene éxito.
+ */
 export const useCreateOrGetConversation = () => {
   const navigate = useNavigate();
   return useMutation({
@@ -43,31 +36,13 @@ export const useCreateOrGetConversation = () => {
   });
 };
 
-// --- LÓGICA PARA OBTENER MENSAJES ---
-
-// 1. Definimos los esquemas para los mensajes.
-const messageUserSchema = z.object({
-  id: z.number(),
-  name: z.string(),
-  last_name: z.string(),
-});
-
-const messageSchema = z.object({
-  id: z.number(),
-  content: z.string(),
-  user_id: z.number(),
-  created_at: z.string(),
-  user: messageUserSchema,
-});
-
-const messagesSchema = z.array(messageSchema);
-
-export type MessageType = z.infer<typeof messageSchema>;
-
-// 2. Función para obtener el historial de mensajes de una conversación.
+/**
+ * Obtiene el historial de mensajes para una conversación específica.
+ * @param conversationId El ID de la conversación.
+ */
 export const getMessages = async (conversationId: string): Promise<MessageType[]> => {
   const { data } = await api.get(`/conversations/${conversationId}/messages`);
-  const response = messagesSchema.safeParse(data);
+  const response = MessageArraySchema.safeParse(data);
 
   if (!response.success) {
     console.error(response.error);
@@ -76,7 +51,9 @@ export const getMessages = async (conversationId: string): Promise<MessageType[]
   return response.data;
 };
 
-// 3. Hook para usar la función en nuestros componentes.
+/**
+ * Hook para obtener y cachear el historial de mensajes de una conversación.
+ */
 export const useGetMessages = (conversationId: string) => {
   return useQuery({
     queryKey: ['messages', conversationId],

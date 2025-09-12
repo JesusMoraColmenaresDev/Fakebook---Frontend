@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { CommentData, CommentDataArray, postData, shareDataForItems, type CreateCommentType, type postDataItemType, type shareDataTypeForItems } from "../types";
+import { CommentSchema, CommentArraySchema, PostSchema, ShareSchema, type CreateCommentType, type PostType, type ShareType } from "../types";
 import { api } from "./apiConfig";
 
 
@@ -12,13 +12,13 @@ import { api } from "./apiConfig";
  */
 export const getComments = async (type: CreateCommentType['type'], id: CreateCommentType['id']) => {
     const { data } = await api.get(`/${type}/${id}/comments`);
-    const response = CommentDataArray.safeParse(data)
+    const response = CommentArraySchema.safeParse(data)
     if (response.success) return response.data
 };
 
 export const createComment = async ({ type, id, content }: CreateCommentType) => { 
     const { data } = await api.post(`/${type}/${id}/comments`, { content });
-    const response = CommentData.safeParse(data)
+    const response = CommentSchema.safeParse(data)
     if (response.success) return response.data
 };
 
@@ -26,11 +26,11 @@ export const createComment = async ({ type, id, content }: CreateCommentType) =>
 export async function getItem(type : CreateCommentType['type'], id: string) {
     const { data } = await api.get(`/${type}/${id}`);
     if(type === 'posts'){
-        const response = postData.safeParse(data)
+        const response = PostSchema.safeParse(data)
         if (response.success) return response.data
     }
     if(type === 'shares'){
-        const response = shareDataForItems.safeParse(data)
+        const response = ShareSchema.safeParse(data)
         if (response.success) return response.data
     }
 } 
@@ -58,7 +58,7 @@ export const useGetItem = (type: 'posts' | 'shares', id: CreateCommentType['id']
         queryKey: ['item',type,id],
         // Anotamos explícitamente el tipo de retorno de la promesa para que useQuery no se confunda.
         // Le decimos que esperamos UNA promesa que resuelva a un Post O un Share.
-        queryFn: (): Promise<postDataItemType | shareDataTypeForItems | undefined> => {
+        queryFn: (): Promise<PostType | ShareType | undefined> => {
             return getItem(type, id)
         },
     });
