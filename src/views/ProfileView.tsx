@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { Outlet, useParams } from 'react-router'
-import type { FriendshipType, UserType } from '../types'
 import { useUserStore } from '../userStore'
 import EditProfileButton from '../components/profile/EditProfileButton'
 import FriendRequestButton from '../components/friendships/FriendRequestButton'

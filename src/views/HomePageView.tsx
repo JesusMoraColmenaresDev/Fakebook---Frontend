@@ -2,17 +2,18 @@ import React, { useEffect, useState } from 'react'
 import { handleLogout } from '../utils/authenticationUtils'
 import { useNavigate } from 'react-router'
 import UserProfileItem from '../components/profile/UserProfileItem'
-import type { FeedResponseType,userDataForItemsArrayType, userDataType } from '../types'
+import type { FeedResponseType, UserItemArrayType } from '../types'
 import { getAllUsers } from '../api/userApi'
 import { getFeeds, useGetFeeds } from '../api/feedApi'
 import PostItem from '../components/post/PostItem'
 import ShareItem from '../components/share/ShareItem'
 import Box from '@mui/material/Box'
 import { CircularProgress } from '@mui/material'
+import ShowChatsButton from '../components/messages/ShowChatsButton'
 
 export default function HomePageView() {
   const navigate = useNavigate()
-  const [users, setUsers] = useState<userDataForItemsArrayType>([])
+  const [users, setUsers] = useState<UserItemArrayType>([])
   const {feeds, isLoadingFeeds, feedsError} = useGetFeeds()
 
   useEffect(() => {
@@ -34,6 +35,7 @@ export default function HomePageView() {
   return (
     <>
       <button onClick={() => handleLogout(navigate)}>cerrar sesion</button>
+      <ShowChatsButton></ShowChatsButton>
       {users.map((user) => (
         <UserProfileItem
           key={user.id}

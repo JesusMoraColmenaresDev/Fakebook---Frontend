@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "./apiConfig";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
-import { ConversationSchema, MessageArraySchema, type ConversationType, type MessageType } from "../types";
+import { ConversationSchema, MessageArraySchema, type ConversationType, type MessageType, type ConversationListItemType, ConversationListSchema } from "../types";
 
 /**
  * Llama a la API para crear una nueva conversación o encontrar una existente entre dos usuarios.
@@ -60,5 +60,31 @@ export const useGetMessages = (conversationId: string) => {
     queryFn: () => getMessages(conversationId),
     // Deshabilitamos el refetch en foco, ya que los WebSockets se encargarán de las actualizaciones.
     refetchOnWindowFocus: false,
+  });
+};
+
+/**
+ * Obtiene la lista de todas las conversaciones del usuario actual.
+ */
+export const getConversations = async (): Promise<ConversationListItemType[]> => {
+  const { data } = await api.get('/conversations');
+  const response = ConversationListSchema.safeParse(data);
+
+  if (!response.success) {
+    console.error(response.error);
+    throw new Error("Los datos de conversaciones recibidos del servidor son inválidos.");
+  }
+  return response.data;
+};
+
+/**
+ * Hook para obtener y cachear la lista de conversaciones del usuario.
+ */
+export const useGetConversations = () => {
+  return useQuery({
+    queryKey: ['conversations'],
+    queryFn: getConversations,
+    // Opcional: Refrescar la lista de chats cada cierto tiempo.
+    // refetchInterval: 30000, 
   });
 };

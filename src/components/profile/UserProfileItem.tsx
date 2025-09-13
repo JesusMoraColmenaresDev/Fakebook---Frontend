@@ -1,10 +1,10 @@
 import { Link } from "react-router";
-import type { userDataForItemsType } from "../../types";
+import type { UserItemType } from "../../types";
 import Avatar from "@mui/material/Avatar";
 import { stringAvatar } from "../../utils/colorsUtil";
 
 
-export default function UserProfileItem({ id, name, last_name }: userDataForItemsType) {
+export default function UserProfileItem({ id, name, last_name }: UserItemType) {
   return (
     <Link
       to={`/profile/${id}`}

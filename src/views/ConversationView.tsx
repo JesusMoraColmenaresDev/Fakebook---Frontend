@@ -37,7 +37,7 @@ export default function ConversationView() {
   useEffect(() => {
     if (!conversationId) return;
 
-    const sub = actionCableService.createSubscription(conversationId, {
+    const sub = actionCableService.createSubscription('ChatChannel', { conversation_id: conversationId }, {
       connected: () => {
         console.log(`Conectado y suscrito al canal de la conversación ${conversationId}`);
       },

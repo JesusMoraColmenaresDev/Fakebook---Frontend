@@ -47,17 +47,18 @@ class ActionCableService {
 
   /**
    * Crea una suscripción a un canal de chat específico.
-   * param conversationId El ID de la conversación a la que suscribirse.
-   * param callbacks Un objeto con las funciones a ejecutar (connected, disconnected, received).
-   * returns La suscripción, que contiene métodos como `speak()` y `unsubscribe()`.
+   * @param channelName El nombre del canal (ej. 'ChatChannel', 'UserChannel').
+   * @param params Parámetros adicionales para la suscripción (ej. { conversation_id: '123' }).
+   * @param callbacks Un objeto con las funciones a ejecutar (connected, disconnected, received).
+   * @returns La suscripción, que contiene métodos como `perform()` y `unsubscribe()`.
    */
-  createSubscription(conversationId: string, callbacks: ChatChannelCallbacks): Subscription | undefined {
+  createSubscription(channelName: string, params: object, callbacks: Partial<ChatChannelCallbacks>): Subscription | undefined {
     if (!this.consumer) {
       console.error("Action Cable: No se puede crear la suscripción, el consumidor no está conectado.");
       return;
     }
 
-    const channelIdentifier = { channel: 'ChatChannel', conversation_id: conversationId };
+    const channelIdentifier = { channel: channelName, ...params };
 
     return this.consumer.subscriptions.create(channelIdentifier, callbacks);
   }
