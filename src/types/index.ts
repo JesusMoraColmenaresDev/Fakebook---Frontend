@@ -132,6 +132,46 @@ export const ConversationListItemSchema = z.object({
 });
 export const ConversationListSchema = z.array(ConversationListItemSchema);
 
+// Define los posibles valores para 'action_type' basándose en tu enum de Rails.
+const actionTypeSchema = z.enum([
+    'new_comment',
+    'new_share',
+    'new_friendship_request',
+    'accepted_friendship',
+]);
+
+// Define los posibles tipos de 'notifiable' basándose en los modelos polimórficos del backend.
+const notifiableTypeSchema = z.enum(['Comment', 'Share', 'Friendship', 'Post']);
+
+// Esquema para un único objeto de notificación.
+export const notificationSchema = z.object({
+    id: z.number(),
+    actor: z.object({
+        id: z.number(),
+        name: z.string(),
+        last_name: z.string(),
+    }),
+    action_type: actionTypeSchema,
+    read: z.boolean(),
+    created_at: z.string().datetime(), // Valida que sea un string en formato ISO 8601
+    notifiable: z.object({
+        type: notifiableTypeSchema,
+        id: z.number(),
+        commentable: z.object({
+            type: z.enum(['Post', 'Share']),
+            id: z.number(),
+        }).optional(),
+    }),
+});
+
+// Esquema para la respuesta completa del endpoint GET /notifications, que es un array.
+export const notificationsResponseSchema = z.array(notificationSchema);
+
+export type notificationArrayType = z.infer<typeof notificationsResponseSchema>;
+
+// Exporta el tipo inferido para usarlo en tu código TypeScript.
+export type Notification = z.infer<typeof notificationSchema>;
+
 // --- TypeScript Types ---
 export type RegisterFormType = z.infer<typeof RegisterFormSchema>;
 export type UserType = z.infer<typeof UserSchema>;

@@ -4,6 +4,8 @@ import { useUserStore } from "../userStore";
 import { getCurrentUser } from "../api/userApi";
 import { type Subscription } from "@rails/actioncable";
 import { actionCableService } from "../services/actionCableService";
+import { useNotificationStore } from "../notificationStore";
+import type { Notification } from "../types";
 
 /**
  * Este componente actúa como la raíz de nuestras rutas.
@@ -13,6 +15,7 @@ import { actionCableService } from "../services/actionCableService";
 export default function RootLayout() {
   const [isInitializing, setIsInitializing] = useState(true);
   const { currentUser, setCurrentUser } = useUserStore();
+  const { addNotification } = useNotificationStore();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,11 +69,9 @@ export default function RootLayout() {
         disconnected: () => {
           console.log('Desconectado del canal de notificaciones.');
         },
-        received: (notification) => {
+        received: (notification: Notification) => {
           console.log('Nueva notificación recibida:', notification);
-          // TODO: Aquí actualizaremos el estado global de notificaciones.
-          // Por ejemplo, añadiendo la notificación a un store de Zustand
-          // o invalidando una query de React Query para que se vuelva a cargar.
+          addNotification(notification);
         },
       }
     );

@@ -18,6 +18,7 @@ import ProfilePost from "./components/profile/ProfilePost";
 import CommentsView from "./views/CommentsView";
 import ConversationsListView from "./views/ConversationsListView";
 import ConversationView from "./views/ConversationView";
+import NotificationsView from "./views/NotificationsView";
 
 
 
@@ -62,7 +63,13 @@ const router = createBrowserRouter([
         path: "/conversation/:conversationId",
         element: <ConversationView></ConversationView>,
         loader: isNotLogin,
-      }
+      },
+      {
+        path: "/notifications",
+        element: <NotificationsView></NotificationsView>,
+        loader: isNotLogin,
+      },
+
     ]
   }
 ]);
