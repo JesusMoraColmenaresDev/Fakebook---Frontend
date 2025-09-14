@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Outlet, redirect, useNavigate } from "react-router";
 import { useUserStore } from "../userStore";
 import { getCurrentUser } from "../api/userApi";
+import { type Subscription } from "@rails/actioncable";
 import { actionCableService } from "../services/actionCableService";
 
 /**
@@ -48,6 +49,37 @@ export default function RootLayout() {
       actionCableService.disconnect();
     };
   }, [currentUser]); // Este efecto depende del estado del usuario.
+
+  // Efecto para suscribirse al canal de notificaciones.
+  useEffect(() => {
+    // La suscripción solo se crea si hay un usuario. Si no, no hacemos nada.
+    if (!currentUser) return;
+
+    // 1. Creamos la suscripción al canal de notificaciones.
+    const subscription : Subscription | undefined = actionCableService.createSubscription(
+      'NotificationsChannel',
+      {}, // No se necesitan parámetros extra, el backend identifica al usuario.
+      {
+        connected: () => {
+          console.log('Conectado al canal de notificaciones.');
+        },
+        disconnected: () => {
+          console.log('Desconectado del canal de notificaciones.');
+        },
+        received: (notification) => {
+          console.log('Nueva notificación recibida:', notification);
+          // TODO: Aquí actualizaremos el estado global de notificaciones.
+          // Por ejemplo, añadiendo la notificación a un store de Zustand
+          // o invalidando una query de React Query para que se vuelva a cargar.
+        },
+      }
+    );
+
+    // 2. La función de limpieza se desuscribe del canal cuando el usuario hace logout.
+    return () => {
+      subscription?.unsubscribe();
+    };
+  }, [currentUser]); // Este efecto también depende del estado del usuario.
 
   if (isInitializing) {
     return <div className="flex items-center justify-center h-screen bg-gray-100 text-gray-600">Cargando aplicación...</div>;
