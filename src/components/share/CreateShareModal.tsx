@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import IconButton from '@mui/material/IconButton';
 import ShareIcon from '@mui/icons-material/Share';
-import type { postDataItemType, shareDataType } from "../../types";
+import type { PostType } from "../../types";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import { useMutation } from "@tanstack/react-query";
@@ -29,7 +29,7 @@ const style = {
 };
 
 type CreateShareModalProps = {
-    post: postDataItemType;
+    post: PostType;
 }
 
 export default function CreateShareModal({ post }: CreateShareModalProps) {

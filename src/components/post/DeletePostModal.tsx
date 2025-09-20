@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
-import type { postDataItemType } from "../../types";
+import type { PostType } from "../../types";
 import { deletePost } from "../../api/postApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useLocation, useNavigate, useParams } from "react-router";
@@ -26,7 +26,7 @@ const style = {
 };
 
 type DeletePostModalProps = {
-    post: postDataItemType;
+    post: PostType;
 }
 
 export default function DeletePostModal({ post }: DeletePostModalProps) {

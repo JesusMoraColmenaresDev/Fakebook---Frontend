@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -7,11 +7,12 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
-import type { postDataFormType } from "../../types";
+import type { PostFormType } from "../../types";
 import { createPost } from "../../api/postApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router";
 import { toast } from "react-toastify";
+import { useUserStore } from "../../userStore";
 
 const style = {
     position: 'absolute' as 'absolute',
@@ -29,18 +30,18 @@ export default function CreatePostModal() {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-
+    const {currentUser} = useUserStore()
     const { userId } = useParams<{ userId: string }>();
 
     const queryClient = useQueryClient();
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<postDataFormType>();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<PostFormType>();
 
     const createPostMutation = useMutation({
         mutationFn: createPost,
         onSuccess: () => {
             // En caso de éxito, invalidamos la query de los posts para que se actualice la lista
             queryClient.invalidateQueries({ queryKey: ['feeds'] });
-            queryClient.invalidateQueries({ queryKey: ['posts', userId] });
+            queryClient.invalidateQueries({ queryKey: ['posts', currentUser.id] });
             handleClose(); // Cierra el modal
             reset(); // Limpia el formulario
             toast.success("Publicacion hecha")
@@ -51,8 +52,8 @@ export default function CreatePostModal() {
         }
     });
 
-    const onSubmit = (data: postDataFormType) => {
-        if (!userId) return;
+    const onSubmit = (data: PostFormType) => {
+        if (!currentUser) return;
         const postData = {
             content: data.content,
             post_picture: "/" // Añadimos el valor para la imagen 

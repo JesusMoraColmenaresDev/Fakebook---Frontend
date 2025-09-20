@@ -1,9 +1,8 @@
 
-import { usegetUserPosts } from '../../api/postApi'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import PostItem from '../post/PostItem'
-import type { postDataItemType } from '../../types'
+import type { PostType } from '../../types'
 import { useGetFeedsByUser } from '../../api/feedApi'
 import ShareItem from '../share/ShareItem'
 
@@ -34,7 +33,7 @@ export default function ProfilePost({ userId }: ProfilePostType) {
         // TypeScript sabrá el tipo de `feed.data` dentro de cada `case`.
         switch (feed.type) {
           case 'post':
-            return <PostItem post={feed.data} key={feed.data.id} />;
+            return <PostItem postInShare={false} post={feed.data} key={feed.data.id} />;
           case 'share':
             return <ShareItem share={feed.data} key={feed.data.id} />;
           default:

@@ -1,13 +1,13 @@
 import { Box, Button } from '@mui/material'
 import React from 'react'
 import { Link, useParams } from 'react-router'
-import type { postDataItemType, shareDataTypeForItems } from '../../types'
+import type { PostType, ShareType } from '../../types'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 
 type ShowCommentsButtonTypes = {
     type: 'posts' | 'shares',
-    item : shareDataTypeForItems | postDataItemType,
+    item : PostType | ShareType,
     textButton : string
 }
 

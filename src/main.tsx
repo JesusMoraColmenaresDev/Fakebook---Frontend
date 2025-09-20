@@ -19,6 +19,7 @@ import CommentsView from "./views/CommentsView";
 import ConversationsListView from "./views/ConversationsListView";
 import ConversationView from "./views/ConversationView";
 import NotificationsView from "./views/NotificationsView";
+import FriendshipsView from "./views/FriendshipsView";
 
 
 
@@ -69,6 +70,11 @@ const router = createBrowserRouter([
         element: <NotificationsView></NotificationsView>,
         loader: isNotLogin,
       },
+      {
+        path: "/friends",
+        element: <FriendshipsView></FriendshipsView>,
+        loader: isNotLogin,
+      }
 
     ]
   }

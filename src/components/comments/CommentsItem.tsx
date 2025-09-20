@@ -1,5 +1,5 @@
 import React from 'react'
-import type { CommentDataArrayType, CommentDataType } from '../../types'
+import type { CommentArrayType, CommentType } from '../../types'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
@@ -7,7 +7,7 @@ import { stringAvatar } from '../../utils/colorsUtil'
 import { Link } from 'react-router'
 
 type CommentItemProps = {
-    comment: CommentDataType
+    comment: CommentType
 }
 
 export default function CommentsItem({ comment }: CommentItemProps) {

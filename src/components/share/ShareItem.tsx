@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import type { shareDataTypeForItems } from '../../types'
+import type { ShareType } from '../../types'
 import Card from '@mui/material/Card'
 import PostItem from '../post/PostItem'
 import Box from '@mui/material/Box'
@@ -19,7 +19,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import ShowCommentsButton from '../comments/ShowCommentsButton'
 
 type ShareItemProps = {
-    share: shareDataTypeForItems;
+    share: ShareType;
 }
 
 export default function ShareItem({ share }: ShareItemProps) {
@@ -39,7 +39,7 @@ export default function ShareItem({ share }: ShareItemProps) {
     };
 
     return (
-        <Card variant="outlined" key={share.id} sx={{ width: 400 }}>
+        <Card variant="outlined" key={share.id} sx={{ maxWidth: '500px' }} component={Link} to={`/shares/${share.id}/comments`}>
             {/* Cabecera del Share, basada en PostItem */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, pb: 1 }}>
                 <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
@@ -80,7 +80,7 @@ export default function ShareItem({ share }: ShareItemProps) {
 
             {/* PostItem original envuelto */}
             <Box sx={{ display: 'flex', justifyContent: 'center', p: 2, pt: 0 }}>
-                <PostItem post={share.post} />
+                <PostItem post={share.post} postInShare={true} />
             </Box>
 
             {/* --- Sección de Acciones --- */}

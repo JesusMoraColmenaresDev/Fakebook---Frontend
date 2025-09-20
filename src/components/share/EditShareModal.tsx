@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { useForm } from "react-hook-form";
 import MenuItem from '@mui/material/MenuItem';
-import type { shareDataTypeForItems } from "../../types";
+import type { ShareType } from "../../types";
 // import { editShare } from "../../api/shareApi"; // <-- Deberás crear esta función
 // import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
@@ -28,7 +28,7 @@ const style = {
 };
 
 type EditShareModalProps = {
-    share: shareDataTypeForItems;
+    share: ShareType;
 }
 
 export default function EditShareModal({ share }: EditShareModalProps) {

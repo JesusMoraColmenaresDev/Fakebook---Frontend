@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { useForm } from "react-hook-form";
 import MenuItem from '@mui/material/MenuItem';
-import type { postDataItemType, postDataFormType } from "../../types";
+import type { PostType, PostFormType  } from "../../types";
 import { editPost } from "../../api/postApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router";
@@ -26,7 +26,7 @@ const style = {
 };
 
 type EditPostModalProps = {
-    post: postDataItemType;
+    post: PostType;
 }
 
 export default function EditPostModal({ post }: EditPostModalProps) {
@@ -36,7 +36,7 @@ export default function EditPostModal({ post }: EditPostModalProps) {
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const { register, handleSubmit, reset, formState: { errors } } = useForm<postDataFormType>({
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<PostFormType>({
         defaultValues: {
             content: post.content
         }
@@ -65,7 +65,7 @@ export default function EditPostModal({ post }: EditPostModalProps) {
         }
     });
 
-    const onSubmit = (data: postDataFormType) => {
+    const onSubmit = (data: PostFormType) => {
 
         editPostMutation.mutate({
             postId: post.id.toString(),

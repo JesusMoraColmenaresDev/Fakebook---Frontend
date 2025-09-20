@@ -10,6 +10,7 @@ import ShareItem from '../components/share/ShareItem'
 import Box from '@mui/material/Box'
 import { CircularProgress } from '@mui/material'
 import ShowChatsButton from '../components/messages/ShowChatsButton'
+import CreatePostModal from '../components/post/CreatePostModal'
 
 export default function HomePageView() {
   const navigate = useNavigate()
@@ -35,7 +36,7 @@ export default function HomePageView() {
   return (
     <>
       <button onClick={() => handleLogout(navigate)}>cerrar sesion</button>
-      <ShowChatsButton></ShowChatsButton>
+      <CreatePostModal></CreatePostModal>
       {users.map((user) => (
         <UserProfileItem
           key={user.id}
@@ -58,7 +59,7 @@ export default function HomePageView() {
           // TypeScript sabrá el tipo de `feed.data` dentro de cada `case`.
           switch (feed.type) {
             case 'post':
-              return <PostItem post={feed.data} key={feed.data.id} />;
+              return <PostItem post={feed.data} postInShare={false} key={feed.data.id} />;
             case 'share':
               return <ShareItem share={feed.data} key={feed.data.id} />;
             default:

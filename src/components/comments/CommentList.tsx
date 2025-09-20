@@ -1,11 +1,11 @@
 import React from 'react'
-import type { CommentDataArrayType } from '../../types'
+import type { CommentArrayType, CommentType } from '../../types'
 import CommentsItem from './CommentsItem'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 
 type CommentListProps = {
-    comments: CommentDataArrayType 
+    comments: CommentArrayType 
 }
 
 export default function CommentList({ comments }: CommentListProps) {

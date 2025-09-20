@@ -7,7 +7,7 @@ import Menu from '@mui/material/Menu';
 import Typography from '@mui/material/Typography';
 import { MoreVerticalIcon } from 'lucide-react';
 import React, { useState } from 'react'
-import type { postDataItemType } from '../../types';
+import type { PostType } from '../../types';
 import Box from '@mui/material/Box';
 import { useUserStore } from '../../userStore';
 import EditPostModal from './EditPostModal';
@@ -20,10 +20,11 @@ import ShowCommentsButton from '../comments/ShowCommentsButton';
 
 
 type PostItemProps = {
-    post: postDataItemType;
+    post: PostType;
+    postInShare: boolean;
 }
 
-export default function PostItem({ post }: PostItemProps) {
+export default function PostItem({ post, postInShare }: PostItemProps) {
     const { type } = useParams<{ type: 'posts' | 'shares' }>()
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -41,7 +42,7 @@ export default function PostItem({ post }: PostItemProps) {
 
 
     return (
-        <Card variant="outlined" sx={{ width: 400 }}>
+        <Card variant="outlined" sx={{ minWidth: '500px' }} component={Link} to={`/posts/${post.id}/comments`}>
             {/* Cabecera del Post */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, pb: 1 }}>
                 <Link className='flex gap-1 items-center' to={`/profile/${post.user.id}`}>
@@ -78,7 +79,7 @@ export default function PostItem({ post }: PostItemProps) {
 
             {/* Esto es para que cuando entremos a la vista de los comments , si entramos a los comentarios del post , se desaparezca el boton de llevar a los comentarios de ese post porque ya estamos ahi */}
 
-            {type != 'posts' &&
+            {!postInShare && type != 'posts' &&
                 <ShowCommentsButton type='posts' item={post} textButton='de la publicacion' ></ShowCommentsButton>
             }
 

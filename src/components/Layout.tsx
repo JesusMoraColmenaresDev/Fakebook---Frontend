@@ -6,6 +6,17 @@ import { type Subscription } from "@rails/actioncable";
 import { actionCableService } from "../services/actionCableService";
 import { useNotificationStore } from "../notificationStore";
 import type { Notification } from "../types";
+import { AppBar, Box, Button, colors, IconButton, Toolbar, Typography } from "@mui/material";
+import { MenuIcon } from "lucide-react";
+import PeopleIcon from '@mui/icons-material/People';
+import ShowChatsButton from "./messages/ShowChatsButton";
+import { Link } from 'react-router'
+import ChatIcon from '@mui/icons-material/Chat';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import ButtonNavbar from "./ButtonNavbar";
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FacebookIcon from '@mui/icons-material/Facebook';
+
 
 /**
  * Este componente actúa como la raíz de nuestras rutas.
@@ -59,7 +70,7 @@ export default function RootLayout() {
     if (!currentUser) return;
 
     // 1. Creamos la suscripción al canal de notificaciones.
-    const subscription : Subscription | undefined = actionCableService.createSubscription(
+    const subscription: Subscription | undefined = actionCableService.createSubscription(
       'NotificationsChannel',
       {}, // No se necesitan parámetros extra, el backend identifica al usuario.
       {
@@ -88,7 +99,19 @@ export default function RootLayout() {
 
   return (
     <>
-      <div className="right-0 fixed h-screen">fokin sidebar</div>
+      <Box sx={{ flexGrow: 1, mb: '16px' }}>
+        <AppBar position="static" elevation={2} sx={{ bgcolor: 'white' }} >
+          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <ButtonNavbar Icon={FacebookIcon} to={'/'}></ButtonNavbar>
+            <Box display={'flex'} gap={8}>
+              <ButtonNavbar Icon={PeopleIcon} to={'/friends'}></ButtonNavbar>
+              <ButtonNavbar Icon={ChatIcon} to={'/conversations'}></ButtonNavbar>
+              <ButtonNavbar Icon={NotificationsIcon} to={'/'}></ButtonNavbar>
+            </Box>
+            <ButtonNavbar Icon={AccountCircleIcon} to={'/profile/' + currentUser?.id}></ButtonNavbar>
+          </Toolbar>
+        </AppBar>
+      </Box>
       <Outlet />
     </>
 
