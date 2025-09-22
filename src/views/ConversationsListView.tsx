@@ -59,14 +59,13 @@ export default function ConversationsListView() {
   }
 
   return (
-    // 6. Renderizamos la lista de conversaciones desde nuestro estado local.
-    <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-      <Paper elevation={3} sx={{ width: '100%', maxWidth: 600 }}>
-        <Typography variant="h5" sx={{ p: 2 }}>
+  <div className="flex justify-center pt-4 px-4 max-w-[1000px] mx-auto">
+      <div className="w-full bg-white rounded-2xl shadow-md">
+        <Typography variant="h5" className="p-4 font-bold text-lg">
           Chats
         </Typography>
         <Divider />
-        <List sx={{ width: '100%', bgcolor: 'background.paper', p: 0 }}>
+        <List className="w-full bg-white p-0">
           {conversations
             .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime())
             .map((convo) => {
@@ -75,7 +74,7 @@ export default function ConversationsListView() {
                 : 'Inicia la conversación';
 
               return (
-                <ListItem key={convo.id} component={RouterLink} to={`/conversation/${convo.id}`} sx={{ textDecoration: 'none', color: 'inherit', '&:hover': { bgcolor: 'action.hover' } }}>
+                <ListItem key={convo.id} component={RouterLink} to={`/conversation/${convo.id}`} sx={{ gap: 2, '&:hover': { bgcolor: 'action.hover' } }}>
                   <ListItemAvatar>
                     <Avatar {...stringAvatar(`${convo.other_user.name} ${convo.other_user.last_name}`)} />
                   </ListItemAvatar>
@@ -85,12 +84,12 @@ export default function ConversationsListView() {
                       secondary={<Typography component="span" variant="body2" color="text.secondary" noWrap>{lastMessageText}</Typography>}
                     />
                     {convo.unread_count > 0 && <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', bgcolor:'primary.main', height: '24px', width: '24px', color: 'white', fontSize: '12px'}}>{convo.unread_count}</Typography>}
-                    </Box>
+                  </Box>
                 </ListItem>
               );
             })}
         </List>
-      </Paper>
-    </Box>
+      </div>
+    </div>
   );
 }

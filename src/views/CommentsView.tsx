@@ -22,36 +22,35 @@ export default function CommentsView() {
   // 2. Manejar estado de carga
   if (isLoadingComments || isLoadingItem) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+      <div className="flex justify-center items-center h-[80vh]">
         <CircularProgress />
-      </Box>
+      </div>
     );
   }
 
   // 3. Manejar estado de error o datos faltantes
   if (commentsError || !id || !type) {
     return (
-      <Container maxWidth="sm" sx={{ mt: 4 }}>
+  <div className="max-w-[1000px] mx-auto mt-4">
         <Typography color="error" textAlign="center">No se pudo cargar la publicación o los comentarios.</Typography>
-      </Container>
+      </div>
     );
   }
 
   return (
-    <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }}>
-      <Box sx={{ bgcolor: 'white', p: 2, borderRadius: 2, boxShadow: 1 }}>
+  <div className="max-w-[1000px] mx-auto mt-4 mb-4">
+      <div className="bg-white p-4 rounded-2xl shadow">
         {/* Renderiza el Post o Share principal (cuando tengas los datos) */}
-        <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+        <div className="flex flex-col items-center">
           {comments && type === 'posts' && <PostItem postInShare={false} post={item as PostType} />}
           {comments && type === 'shares' && <ShareItem share={item as ShareType} />}
-        </Box>
+        </div>
 
-
-        <Divider sx={{ my: 2 }} />
+        <Divider className="my-4" />
 
         <SendComment type={type} id={id} />
         <CommentList comments={comments!} />
-      </Box>
-    </Container>
+      </div>
+    </div>
   );
 }

@@ -100,21 +100,24 @@ export default function RootLayout() {
   return (
     <>
       <Box sx={{ flexGrow: 1, mb: '16px' }}>
-        <AppBar position="static" elevation={2} sx={{ bgcolor: 'white' }} >
-          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <ButtonNavbar Icon={FacebookIcon} to={'/'}></ButtonNavbar>
-            <Box display={'flex'} gap={8}>
-              <ButtonNavbar Icon={PeopleIcon} to={'/friends'}></ButtonNavbar>
-              <ButtonNavbar Icon={ChatIcon} to={'/conversations'}></ButtonNavbar>
-              <ButtonNavbar Icon={NotificationsIcon} to={'/'}></ButtonNavbar>
+        <AppBar position="static" elevation={2} sx={{ bgcolor: 'white', borderBottom: '1px solid #ddd' }}>
+          <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', minHeight: 64 }}>
+            {/* Logo y buscador */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <ButtonNavbar Icon={FacebookIcon} to={'/'} />
+              <ButtonNavbar Icon={PeopleIcon} to={'/friends'} />
             </Box>
-            <ButtonNavbar Icon={AccountCircleIcon} to={'/profile/' + currentUser?.id}></ButtonNavbar>
+
+            {/* Iconos de usuario */}
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+              <ButtonNavbar Icon={ChatIcon} to={'/conversations'} />
+              <ButtonNavbar Icon={NotificationsIcon} to={'/notifications'} />
+              <ButtonNavbar Icon={AccountCircleIcon} to={'/profile/' + currentUser?.id} />
+            </Box>
           </Toolbar>
         </AppBar>
       </Box>
       <Outlet />
     </>
-
-
   )
-}  
+}

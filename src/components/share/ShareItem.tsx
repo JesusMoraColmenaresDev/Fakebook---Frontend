@@ -39,11 +39,11 @@ export default function ShareItem({ share }: ShareItemProps) {
     };
 
     return (
-        <Card variant="outlined" key={share.id} sx={{ maxWidth: '500px' }} component={Link} to={`/shares/${share.id}/comments`}>
-            {/* Cabecera del Share, basada en PostItem */}
+        <Card variant="outlined" key={share.id} sx={{ minWidth: '100%', bgcolor: 'white' }}>
+            {/* Cabecera del Share */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, pb: 1 }}>
                 <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
-                    <Link className='flex gap-1 items-center' to={`/profile/${share.user.id}`}>
+                    <Link className='flex gap-2 items-center' to={`/profile/${share.user.id}`}>
                         <Avatar {...stringAvatar(share.user.name + " " + share.user.last_name)}></Avatar>
                         <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
                             {share.user.name} {share.user.last_name}
@@ -53,10 +53,7 @@ export default function ShareItem({ share }: ShareItemProps) {
                         Ha compartido
                     </Typography>
                 </Box>
-
-
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    {/* --- Botón del Menú (solo para el dueño del share) --- */}
                     {currentUser!.id === share.user.id && (
                         <IconButton
                             aria-label="more"
@@ -66,16 +63,17 @@ export default function ShareItem({ share }: ShareItemProps) {
                         </IconButton>
                     )}
                 </Box>
-
             </Box>
 
             {/* Contenido del Share (el comentario) */}
             {share.content && (
-                <CardContent sx={{ pt: 0 }}>
-                    <Typography variant="body2">
-                        {share.content}
-                    </Typography>
-                </CardContent>
+                <Link to={`/shares/${share.id}/comments`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <CardContent sx={{ pt: 0 }}>
+                        <Typography variant="body2">
+                            {share.content}
+                        </Typography>
+                    </CardContent>
+                </Link>
             )}
 
             {/* PostItem original envuelto */}
@@ -83,15 +81,12 @@ export default function ShareItem({ share }: ShareItemProps) {
                 <PostItem post={share.post} postInShare={true} />
             </Box>
 
-            {/* --- Sección de Acciones --- */}
             <Divider />
 
             {type != 'shares' &&
-                <ShowCommentsButton type='shares' item={share} textButton='del compartido' ></ShowCommentsButton>
-
+                <ShowCommentsButton type='shares' item={share} textButton='del compartido' />
             }
 
-            {/* --- Componente del Menú para el Share --- */}
             <Menu
                 anchorEl={anchorEl}
                 open={open}

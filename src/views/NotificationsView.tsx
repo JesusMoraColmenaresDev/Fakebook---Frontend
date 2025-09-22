@@ -35,16 +35,15 @@ export default function NotificationsView() {
   }
 
   return (
-   <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
-      <Paper elevation={3} sx={{ width: '100%', maxWidth: 600 }}>
+  <div className="flex justify-center pt-4 px-4 max-w-[1000px] mx-auto">
+      <div className="w-full bg-white rounded-2xl shadow-md">
         <List>
           {notifications.map((notification) => (
             <NotificacionItem key={notification.id} {...notification} />
           ))}
         </List>
-      </Paper>
-
-    </Box>
+      </div>
+    </div>
 
 
   );

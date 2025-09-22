@@ -16,6 +16,7 @@ import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import { stringAvatar } from '../utils/colorsUtil'
 import ButtonSendMessage from '../components/profile/ButtonSendMessage'
+import ProfileLogoutButton from '../components/profile/ProfileLogoutButton'
 
 export default function ProfileView() {
     const { userId } = useParams<{ userId: string }>()
@@ -43,9 +44,10 @@ export default function ProfileView() {
             return (
                 <div className='flex gap-4'>
                     <EditProfileButton />
-                    <CreatePostModal></CreatePostModal>
+                    <CreatePostModal />
+                    {/* Botón de logout */}
+                    {<ProfileLogoutButton />}
                 </div>
-
             );
         }
 
@@ -83,8 +85,6 @@ export default function ProfileView() {
                         <div className="flex gap-2">
                             <ConfirmFriendRequestButton idFriendship={friendshipProfileUser.id.toString()}></ConfirmFriendRequestButton>
                             <CancelFriendRequestButton idFriendship={friendshipProfileUser.id.toString()} textButton="Eliminar solicitud"></CancelFriendRequestButton>
-                            <ButtonSendMessage userReceiverId={finalProfileUser!.id.toString()} />
-
                         </div>
                     );
                 }
@@ -106,7 +106,7 @@ export default function ProfileView() {
 
     return (
         <div className="min-h-screen bg-[#F0F2F5]">
-            <div className="max-w-6xl mx-auto">
+            <div className="max-w-[1000px] mx-auto">
                 <div className="bg-white rounded-b-lg shadow-sm">
                     {/* Profile Info Section */}
                     <div className="px-6 pb-4">

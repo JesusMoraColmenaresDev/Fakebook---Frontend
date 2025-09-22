@@ -42,48 +42,40 @@ export default function PostItem({ post, postInShare }: PostItemProps) {
 
 
     return (
-        <Card variant="outlined" sx={{ minWidth: '500px' }} component={Link} to={`/posts/${post.id}/comments`}>
+        <Card variant="outlined" sx={{ minWidth: postInShare ? '80%' : '100%', bgcolor: 'white' }}>
             {/* Cabecera del Post */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', p: 2, pb: 1 }}>
-                <Link className='flex gap-1 items-center' to={`/profile/${post.user.id}`}>
-                    <Avatar {...stringAvatar(post.user.name + " " + post.user.last_name)}></Avatar>
+                <Link className='flex gap-2 items-center' to={`/profile/${post.user.id}`}>
+                    <Avatar {...stringAvatar(post.user.name + " " + post.user.last_name)} />
                     <Typography variant="h6" component="div" sx={{ fontWeight: 'bold' }}>
                         {post.user.name} {post.user.last_name}
                     </Typography>
                 </Link>
-
                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    {/* --- Botón de Compartir (para todos) --- */}
                     <CreateShareModal post={post} />
-                    {/* --- Botón del Menú (solo para el dueño) --- */}
                     {currentUser!.id === post.user.id && (
-                        <IconButton
-                            aria-label="more"
-                            onClick={handleClick}
-                        >
+                        <IconButton aria-label="more" onClick={handleClick}>
                             <MoreVerticalIcon />
                         </IconButton>
                     )}
                 </Box>
             </Box>
 
-            {/* Contenido del Post */}
-            <CardContent sx={{ pt: 0 }}>
-                <Typography variant="body2">
-                    {post.content}
-                </Typography>
-            </CardContent>
+            {/* Contenido del Post clickeable */}
+            <Link to={`/posts/${post.id}/comments`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <CardContent sx={{ pt: 0 }}>
+                    <Typography variant="body2">
+                        {post.content}
+                    </Typography>
+                </CardContent>
+            </Link>
 
-            {/* --- Sección de Acciones --- */}
             <Divider />
 
-            {/* Esto es para que cuando entremos a la vista de los comments , si entramos a los comentarios del post , se desaparezca el boton de llevar a los comentarios de ese post porque ya estamos ahi */}
-
             {!postInShare && type != 'posts' &&
-                <ShowCommentsButton type='posts' item={post} textButton='de la publicacion' ></ShowCommentsButton>
+                <ShowCommentsButton type='posts' item={post} textButton='de la publicacion' />
             }
 
-            {/* --- Componente del Menú --- */}
             <Menu
                 anchorEl={anchorEl}
                 open={open}

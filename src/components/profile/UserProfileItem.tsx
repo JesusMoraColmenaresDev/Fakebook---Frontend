@@ -1,23 +1,41 @@
+import React from "react";
 import { Link } from "react-router";
 import type { UserItemType } from "../../types";
 import Avatar from "@mui/material/Avatar";
 import { stringAvatar } from "../../utils/colorsUtil";
-
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import { MoreVerticalIcon } from "lucide-react";
 
 export default function UserProfileItem({ id, name, last_name }: UserItemType) {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
-    <Link
-      to={`/profile/${id}`}
-      className="flex gap-2 w-full items-center p-2 rounded-lg hover:bg-gray-200 transition-colors duration-200"
-    >
-      {/*foto de perfil temporal*/}
-      <Avatar {...stringAvatar(name + " " + last_name)}></Avatar>
-      {/*<img
-        src={profilePictureUrl}
-        alt={`Foto de perfil de ${name}`}
-        className="w-10 h-10 rounded-full object-cover mr-3"
-      />*/}
-      <span className="font-semibold text-2xl  text-gray-800">{name + " " + last_name}</span>
-    </Link>
+    <div className="flex justify-between gap-2 w-full items-center p-2 rounded-lg hover:bg-gray-200 transition-colors duration-200">
+      <div className="flex items-center gap-4">
+        <Avatar {...stringAvatar(name + " " + last_name)}></Avatar>
+        <span className="font-semibold text-4xl  text-gray-800">{name + " " + last_name}</span>
+      </div>
+      <div className="flex items-center gap-2">
+        <IconButton aria-label="more" onClick={handleClick}>
+          <MoreVerticalIcon />
+        </IconButton>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          slotProps={{ paper: { style: { maxHeight: 200, width: 200 } } }}
+        >
+          <div>Eliminar de amigos</div>
+        </Menu>
+      </div>
+    </div>
   );
 }

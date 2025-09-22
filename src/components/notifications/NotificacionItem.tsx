@@ -1,6 +1,6 @@
 import React from 'react'
 import type { Notification } from '../../types'
-import { Avatar, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material'
+import { Avatar, Box, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material'
 import { stringAvatar } from '../../utils/colorsUtil'
 import { Link as RouterLink } from 'react-router';
 
@@ -50,10 +50,11 @@ export default function NotificacionItem(notification: Notification) {
   };
 
   return (
-    <ListItem alignItems="flex-start" component={RouterLink} to={getNotificationLink()} sx={{ textDecoration: 'none', color: 'inherit' }}>
+    <ListItem alignItems="flex-start" component={RouterLink} to={getNotificationLink()} sx={{ display: 'flex', alignItems: 'center', gap: 1, '&:hover': { bgcolor: 'action.hover' } }}>
       <ListItemAvatar>
         <Avatar {...stringAvatar(`${notification.actor.name} ${notification.actor.last_name}`)} />
       </ListItemAvatar>
+
       <ListItemText
         primary={
           <Typography component="span" variant="body2" color="text.primary">
@@ -63,6 +64,7 @@ export default function NotificacionItem(notification: Notification) {
         }
         secondary={new Date(notification.created_at).toLocaleString()}
       />
+
     </ListItem>
   )
 }
