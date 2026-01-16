@@ -54,18 +54,31 @@ export default function HomePageView() {
   const [users, setUsers] = useState<UserItemArrayType>([])
   const { feeds, isLoadingFeeds, feedsError } = useGetFeeds()
 
+  const [usersError, setUsersError] = useState<string | null>(null);
   useEffect(() => {
     const getUsers = async () => {
-      const users = await getAllUsers()
-      setUsers(users!)
-    }
-    getUsers()
-  }, [])
+      try {
+        const users = await getAllUsers();
+        setUsers(users!);
+      } catch (error) {
+        setUsersError(error instanceof Error ? error.message : "Error al cargar los usuarios.");
+      }
+    };
+    getUsers();
+  }, []);
 
   if (isLoadingFeeds) {
     return (
       <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
         <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (feedsError || usersError) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+        <Typography color="error" textAlign="center">{feedsError?.message || usersError || "Error al cargar el feed o los usuarios."}</Typography>
       </Box>
     );
   }

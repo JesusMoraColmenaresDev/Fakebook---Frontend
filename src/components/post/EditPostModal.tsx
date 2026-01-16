@@ -61,7 +61,7 @@ export default function EditPostModal({ post }: EditPostModalProps) {
         },
         onError: (error) => {
             console.error("Error al editar el post:", error);
-            toast.error("Error al editar la publicación");
+            toast.error(error instanceof Error ? error.message : "Error al editar la publicación");
         }
     });
 

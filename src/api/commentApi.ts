@@ -10,30 +10,58 @@ import { api } from "./apiConfig";
  * param id - El ID del post o share.
  * returns Una promesa que resuelve a un array de comentarios.
  */
+import { isAxiosError } from "axios";
+
 export const getComments = async (type: CreateCommentType['type'], id: CreateCommentType['id']) => {
-    const { data } = await api.get(`/${type}/${id}/comments`);
-    const response = CommentArraySchema.safeParse(data)
-    if (response.success) return response.data
+    try {
+        const { data } = await api.get(`/${type}/${id}/comments`);
+        const response = CommentArraySchema.safeParse(data);
+        if (response.success) return response.data;
+        throw new Error("Respuesta inválida al obtener comentarios.");
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error || "Error desconocido del servidor");
+        }
+        throw new Error(error instanceof Error ? error.message : "Error desconocido");
+    }
 };
 
 export const createComment = async ({ type, id, content }: CreateCommentType) => { 
-    const { data } = await api.post(`/${type}/${id}/comments`, { content });
-    const response = CommentSchema.safeParse(data)
-    if (response.success) return response.data
+    try {
+        const { data } = await api.post(`/${type}/${id}/comments`, { content });
+        const response = CommentSchema.safeParse(data);
+        if (response.success) return response.data;
+        throw new Error("Respuesta inválida al crear comentario.");
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error || "Error desconocido del servidor");
+        }
+        throw new Error(error instanceof Error ? error.message : "Error desconocido");
+    }
 };
 
 
 export async function getItem(type : CreateCommentType['type'], id: string) {
-    const { data } = await api.get(`/${type}/${id}`);
-    if(type === 'posts'){
-        const response = PostSchema.safeParse(data)
-        if (response.success) return response.data
+    try {
+        const { data } = await api.get(`/${type}/${id}`);
+        if(type === 'posts'){
+            const response = PostSchema.safeParse(data);
+            if (response.success) return response.data;
+            throw new Error("Respuesta inválida al obtener post.");
+        }
+        if(type === 'shares'){
+            const response = ShareSchema.safeParse(data);
+            if (response.success) return response.data;
+            throw new Error("Respuesta inválida al obtener share.");
+        }
+        throw new Error("Tipo de item desconocido.");
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error || "Error desconocido del servidor");
+        }
+        throw new Error(error instanceof Error ? error.message : "Error desconocido");
     }
-    if(type === 'shares'){
-        const response = ShareSchema.safeParse(data)
-        if (response.success) return response.data
-    }
-} 
+}
 
 export const useGetComments = (type: CreateCommentType['type'], id: CreateCommentType['id']) => {
     const {

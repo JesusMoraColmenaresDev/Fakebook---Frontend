@@ -62,7 +62,7 @@ export default function EditShareModal({ share }: EditShareModalProps) {
         },
         onError: (error) => {
             console.error("Error al editar el compartido:", error);
-            toast.error("Error al editar el compartido")
+            toast.error(error instanceof Error ? error.message : "Error al editar el compartido");
         }
     })
 

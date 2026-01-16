@@ -22,7 +22,7 @@ export default function ConversationView() {
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
   // 1. Obtener el historial de mensajes de la API
-  const { data: initialMessages, isLoading, isError } = useGetMessages(conversationId!);
+  const { data: initialMessages, isLoading, error } = useGetMessages(conversationId!);
 
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<FormInputs>();
 
@@ -32,6 +32,14 @@ export default function ConversationView() {
       setMessages(initialMessages);
     }
   }, [initialMessages]);
+
+  if (error) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
+        <Typography color="error" textAlign="center">{error.message || "Error al cargar los mensajes."}</Typography>
+      </Box>
+    );
+  }
 
   // Efecto para suscribirse al canal de Action Cable.
   useEffect(() => {
@@ -83,12 +91,12 @@ export default function ConversationView() {
     return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}><CircularProgress /></Box>;
   }
 
-  if (isError) {
+  if (error) {
     return <Typography color="error" textAlign="center" sx={{ mt: 4 }}>Error al cargar la conversación.</Typography>;
   }
 
   return (
-    <Box sx={{maxHeight: '400px', display: 'flex', flexDirection: 'column', p: 2, bgcolor: '#F0F2F5' }}>
+    <Box sx={{maxHeight: '800px', display: 'flex', flexDirection: 'column', p: 2, bgcolor: '#F0F2F5' }}>
       <Paper elevation={2} sx={{ flexGrow: 1, overflowY: 'auto', p: 2, display: 'flex', flexDirection: 'column' }}>
         <List>
           {messages.map((msg) => {

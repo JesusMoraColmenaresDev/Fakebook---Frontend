@@ -33,11 +33,12 @@ export default function RootLayout() {
     const rehydrateUserSession = async () => {
       const token = localStorage.getItem("token");
       if (token) {
-        const user = await getCurrentUser();
-        if (user) {
+        try {
+          const user = await getCurrentUser();
           setCurrentUser(user);
-        } else {
-          console.error("La sesión ha expirado o el token es inválido:");
+        } catch (error) {
+          const errorMsg = error instanceof Error ? error.message : "La sesión ha expirado o el token es inválido.";
+          console.error(errorMsg);
           localStorage.removeItem("token");
           setCurrentUser(null);
           navigate("/login");

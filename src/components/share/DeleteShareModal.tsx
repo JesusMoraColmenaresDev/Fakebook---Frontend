@@ -52,7 +52,7 @@ export default function DeleteShareModal({ share }: DeleteShareModalProps) {
         },
         onError: (error) => {
             console.error("Error al eliminar el compartido:", error);
-            toast.error("Error al eliminar el compartido")
+            toast.error(error instanceof Error ? error.message : "Error al eliminar el compartido");
         }
     })
     

@@ -14,7 +14,7 @@ export default function NotificationsView() {
   const {
     data: initialNotifications,
     isLoading,
-    isError
+    error
   } = useGetNotifications(!hasBeenFetched);
 
   // 3. Efecto para sincronizar los datos de React Query con nuestro store de Zustand.
@@ -30,8 +30,8 @@ export default function NotificationsView() {
     return <div>Cargando notificaciones...</div>;
   }
 
-  if (isError) {
-    return <div>Error: No se pudieron cargar las notificaciones.</div>;
+  if (error) {
+    return <div style={{ color: 'red', textAlign: 'center' }}>{error.message || "Error: No se pudieron cargar las notificaciones."}</div>;
   }
 
   return (

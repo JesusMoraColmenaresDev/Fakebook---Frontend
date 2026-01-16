@@ -1,21 +1,29 @@
+
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "./apiConfig";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { ConversationSchema, MessageArraySchema, type ConversationType, type MessageType, type ConversationListItemType, ConversationListSchema } from "../types";
+import { isAxiosError } from "axios";
 
 /**
  * Llama a la API para crear una nueva conversación o encontrar una existente entre dos usuarios.
  * @param receiverId El ID del usuario con el que se quiere conversar.
  */
 export const createOrGetConversation = async (receiverId: string): Promise<ConversationType> => {
-  const { data } = await api.post('/conversations', { receiver_id: receiverId });
-  const response = ConversationSchema.safeParse(data);
-
-  if (!response.success) {
-    throw new Error("Los datos recibidos del servidor son inválidos.");
+  try {
+    const { data } = await api.post('/conversations', { receiver_id: receiverId });
+    const response = ConversationSchema.safeParse(data);
+    if (!response.success) {
+      throw new Error("Los datos recibidos del servidor son inválidos.");
+    }
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error || "Error desconocido del servidor");
+    }
+    throw new Error(error instanceof Error ? error.message : "Error desconocido");
   }
-  return response.data;
 };
 
 /**
@@ -41,14 +49,19 @@ export const useCreateOrGetConversation = () => {
  * @param conversationId El ID de la conversación.
  */
 export const getMessages = async (conversationId: string): Promise<MessageType[]> => {
-  const { data } = await api.get(`/conversations/${conversationId}/messages`);
-  const response = MessageArraySchema.safeParse(data);
-
-  if (!response.success) {
-    console.error(response.error);
-    throw new Error("Los datos de mensajes recibidos del servidor son inválidos.");
+  try {
+    const { data } = await api.get(`/conversations/${conversationId}/messages`);
+    const response = MessageArraySchema.safeParse(data);
+    if (!response.success) {
+      throw new Error("Los datos de mensajes recibidos del servidor son inválidos.");
+    }
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error || "Error desconocido del servidor");
+    }
+    throw new Error(error instanceof Error ? error.message : "Error desconocido");
   }
-  return response.data;
 };
 
 /**
@@ -67,14 +80,19 @@ export const useGetMessages = (conversationId: string) => {
  * Obtiene la lista de todas las conversaciones del usuario actual.
  */
 export const getConversations = async (): Promise<ConversationListItemType[]> => {
-  const { data } = await api.get('/conversations');
-  const response = ConversationListSchema.safeParse(data);
-
-  if (!response.success) {
-    console.error(response.error);
-    throw new Error("Los datos de conversaciones recibidos del servidor son inválidos.");
+  try {
+    const { data } = await api.get('/conversations');
+    const response = ConversationListSchema.safeParse(data);
+    if (!response.success) {
+      throw new Error("Los datos de conversaciones recibidos del servidor son inválidos.");
+    }
+    return response.data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error || "Error desconocido del servidor");
+    }
+    throw new Error(error instanceof Error ? error.message : "Error desconocido");
   }
-  return response.data;
 };
 
 /**

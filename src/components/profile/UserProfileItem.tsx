@@ -18,24 +18,11 @@ export default function UserProfileItem({ id, name, last_name }: UserItemType) {
   };
 
   return (
-    <div className="flex justify-between gap-2 w-full items-center p-2 rounded-lg hover:bg-gray-200 transition-colors duration-200">
+    <Link to={`/profile/${id}`} className="flex justify-between gap-2 w-full items-center p-2 rounded-lg hover:bg-gray-200 transition-colors duration-200">
       <div className="flex items-center gap-4">
         <Avatar {...stringAvatar(name + " " + last_name)}></Avatar>
         <span className="font-semibold text-4xl  text-gray-800">{name + " " + last_name}</span>
       </div>
-      <div className="flex items-center gap-2">
-        <IconButton aria-label="more" onClick={handleClick}>
-          <MoreVerticalIcon />
-        </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          slotProps={{ paper: { style: { maxHeight: 200, width: 200 } } }}
-        >
-          <div>Eliminar de amigos</div>
-        </Menu>
-      </div>
-    </div>
+    </Link>
   );
 }

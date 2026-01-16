@@ -11,7 +11,7 @@ import type { ConversationListItemType } from '../types';
 
 export default function ConversationsListView() {
   // 1. Obtenemos los datos iniciales de la API.
-  const { data: initialConversations, isLoading, isError } = useGetConversations();
+  const { data: initialConversations, isLoading, error } = useGetConversations();
   const { currentUser } = useUserStore();
 
   // 2. Creamos un estado local para poder actualizar las conversaciones.
@@ -50,8 +50,8 @@ export default function ConversationsListView() {
     return <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}><CircularProgress /></Box>;
   }
 
-  if (isError) {
-    return <Typography color="error" textAlign="center" sx={{ mt: 4 }}>Error al cargar las conversaciones.</Typography>;
+  if (error) {
+    return <Typography color="error" textAlign="center" sx={{ mt: 4 }}>{error.message || "Error al cargar las conversaciones."}</Typography>;
   }
 
   if (!conversations || conversations.length === 0) {

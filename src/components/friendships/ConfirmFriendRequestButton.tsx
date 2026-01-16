@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { acceptFriendship } from "../../api/friendshipApi"
 import { useParams } from "react-router"
 import Button from "@mui/material/Button"
+import { toast } from "react-toastify"
 
 type confirmFriendRequestButton = {
     idFriendship: string
@@ -24,6 +25,9 @@ export default function ConfirmFriendRequestButton({ idFriendship }: confirmFrie
             queryClient.invalidateQueries({ queryKey: ['friendship', userId] })
             // También invalidamos la lista de amigos, ya que ha cambiado.
             queryClient.invalidateQueries({ queryKey: ['UsersFriends', userId] })
+        },
+        onError: (error) => {
+            toast.error(error instanceof Error ? error.message : "Error al aceptar la solicitud de amistad.");
         }
     })
 

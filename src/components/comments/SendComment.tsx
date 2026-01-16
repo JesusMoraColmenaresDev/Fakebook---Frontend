@@ -34,7 +34,7 @@ export default function SendComment({ type, id }: SendCommentProps) {
     },
     onError: (error) => {
       console.error("Error al crear el comentario:", error);
-      toast.error("Error al crear el comentario");
+      toast.error(error instanceof Error ? error.message : "Error al crear el comentario");
     }
   });
 

@@ -48,7 +48,7 @@ export default function CreatePostModal() {
         },
         onError: (error) => {
             console.error("Error al crear el post:", error);
-            toast.error("Error al crear la publicacion")
+            toast.error(error instanceof Error ? error.message : "Error al crear la publicacion");
         }
     });
 

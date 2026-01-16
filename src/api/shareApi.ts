@@ -1,5 +1,7 @@
+
 import { ShareSchema, type ShareFormType, type ShareEditType } from "../types"
 import { api } from "./apiConfig"
+import { isAxiosError } from "axios"
 
 /**
  * Crea un nuevo 'share' de una publicación.
@@ -7,19 +9,24 @@ import { api } from "./apiConfig"
  * @param post_id El ID del post que se está compartiendo.
  */
 export const createShare = async ({ content, post_id }: ShareFormType) => {
-    const { data } = await api.post("/shares", {
-        share: {
-            content: content,
-            post_id: post_id
+    try {
+        const { data } = await api.post("/shares", {
+            share: {
+                content: content,
+                post_id: post_id
+            }
+        })
+        const response = ShareSchema.safeParse(data)
+        if (response.success) {
+            return response.data
         }
-    })
-
-    const response = ShareSchema.safeParse(data)
-    if (response.success) {
-        console.log(data)
-        return response.data
+        throw new Error("Respuesta inválida al crear compartido.");
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error || "Error desconocido del servidor");
+        }
+        throw new Error(error instanceof Error ? error.message : "Error desconocido");
     }
-    return data
 }
 
 
@@ -29,14 +36,21 @@ export const createShare = async ({ content, post_id }: ShareFormType) => {
  * @param content El nuevo contenido del share.
  */
 export const updateShare = async ({shareId , content} : ShareEditType) => {
-    const { data } = await api.patch("/shares/" + shareId, {
-        share: {
-            content: content
+    try {
+        const { data } = await api.patch("/shares/" + shareId, {
+            share: {
+                content: content
+            }
+        })
+        const response = ShareSchema.safeParse(data)
+        if (response.success) return response.data
+        throw new Error("Respuesta inválida al editar compartido.");
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error || "Error desconocido del servidor");
         }
-    })
-
-    const response = ShareSchema.safeParse(data)
-    if (response.success) return response.data
+        throw new Error(error instanceof Error ? error.message : "Error desconocido");
+    }
 }
 
 /**
@@ -44,6 +58,13 @@ export const updateShare = async ({shareId , content} : ShareEditType) => {
  * @param shareId El ID del share a eliminar.
  */
 export const deleteShare = async (shareId: string) => {
-    const response = await api.delete("/shares/" + shareId)
-    return response.data
+    try {
+        const response = await api.delete("/shares/" + shareId)
+        return response.data
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error || "Error desconocido del servidor");
+        }
+        throw new Error(error instanceof Error ? error.message : "Error desconocido");
+    }
 }

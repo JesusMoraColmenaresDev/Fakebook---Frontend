@@ -1,11 +1,13 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { api } from "./apiConfig";
 import { UserSchema, UserItemArraySchema, type UserType, type UserItemArrayType } from "../types";
+import { isAxiosError } from "axios";
 
 /**
  * Obtiene los datos del usuario actualmente autenticado.
  */
-export const getCurrentUser = async (): Promise<UserType | null> => {
+export const getCurrentUser = async (): Promise<UserType> => {
     try {
         const response = await api.get("/current_user");
         if (response.status === 200) {
@@ -13,42 +15,69 @@ export const getCurrentUser = async (): Promise<UserType | null> => {
             if (parsedUser.success) {
                 return parsedUser.data;
             }
+            throw new Error("Respuesta inválida al obtener usuario actual.");
         }
-        return null;
+        throw new Error("Respuesta inválida del servidor al obtener usuario actual.");
     } catch (error) {
-        console.error("La sesión ha expirado o el token es inválido:", error);
         localStorage.removeItem("token");
-        return null
+        if (isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error || "Error desconocido del servidor");
+        }
+        throw new Error(error instanceof Error ? error.message : "Error desconocido");
     }
 }
 
 /**
  * Obtiene una lista de todos los usuarios (versión simplificada).
  */
-export const getAllUsers = async (): Promise<UserItemArrayType | undefined> => {
-    const { data } = await api.get("/users");
-    const response = UserItemArraySchema.safeParse(data);
-    if (response.success) return response.data;
+export const getAllUsers = async (): Promise<UserItemArrayType> => {
+    try {
+        const { data } = await api.get("/users");
+        const response = UserItemArraySchema.safeParse(data);
+        if (response.success) return response.data;
+        throw new Error("Respuesta inválida al obtener usuarios.");
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error || "Error desconocido del servidor");
+        }
+        throw new Error(error instanceof Error ? error.message : "Error desconocido");
+    }
 }
 
 /**
  * Obtiene la lista de amigos de un usuario específico.
  * @param userId El ID del usuario.
  */
-export const getAllUserFriends = async (userId: string): Promise<UserItemArrayType | undefined> => {
-    const {data} = await api.get("/users/" + userId + "/friends");
-    const response = UserItemArraySchema.safeParse(data)
-     if (response.success) return response.data;
+export const getAllUserFriends = async (userId: string): Promise<UserItemArrayType> => {
+    try {
+        const {data} = await api.get("/users/" + userId + "/friends");
+        const response = UserItemArraySchema.safeParse(data)
+        if (response.success) return response.data;
+        throw new Error("Respuesta inválida al obtener amigos del usuario.");
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error || "Error desconocido del servidor");
+        }
+        throw new Error(error instanceof Error ? error.message : "Error desconocido");
+    }
 }
 
 /**
  * Obtiene los datos completos de un usuario por su ID.
  * @param userId El ID del usuario.
  */
-export const getUserById = async (userId: string): Promise<UserType | undefined> => {
-    const { data } = await api.get("/users/" + userId);
-    const response = UserSchema.safeParse(data);
-    if (response.success) return response.data;
+export const getUserById = async (userId: string): Promise<UserType> => {
+    try {
+        const { data } = await api.get("/users/" + userId);
+        const response = UserSchema.safeParse(data);
+        if (response.success) return response.data;
+        throw new Error("Respuesta inválida al obtener usuario por ID.");
+    } catch (error) {
+        if (isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error || "Error desconocido del servidor");
+        }
+        throw new Error(error instanceof Error ? error.message : "Error desconocido");
+    }
 }
 
 /**

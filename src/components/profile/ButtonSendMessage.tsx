@@ -2,6 +2,7 @@ import React from 'react'
 import Button from '@mui/material/Button';
 import NearMeIcon from '@mui/icons-material/NearMe';
 import { useCreateOrGetConversation } from '../../api/conversationApi';
+import { toast } from 'react-toastify';
 
 type ButtonSendMessageProps = {
   userReceiverId: string;
@@ -12,8 +13,11 @@ export default function ButtonSendMessage({ userReceiverId }: ButtonSendMessageP
   const { mutate, isPending } = useCreateOrGetConversation();
 
   const handleSendMessage = () => {
-    // Al hacer clic, ejecutamos la mutación con el ID del receptor.
-    mutate(userReceiverId);
+    mutate(userReceiverId, {
+      onError: (error) => {
+        toast.error(error instanceof Error ? error.message : "No se pudo iniciar la conversación.");
+      }
+    });
   };
 
   return (

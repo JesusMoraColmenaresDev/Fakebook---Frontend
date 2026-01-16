@@ -16,7 +16,7 @@ export default function ProfilePost({ userId }: ProfilePostType) {
 
 
   if (isLoadingFeeds) return <Typography sx={{ mt: 2, textAlign: 'center' }}>Cargando publicaciones...</Typography>
-  if (feedsError) return <Typography sx={{ mt: 2, color: 'error.main', textAlign: 'center' }}>Error al cargar las publicaciones.</Typography>
+  if (feedsError) return <Typography sx={{ mt: 2, color: 'error.main', textAlign: 'center' }}>{feedsError.message || "Error al cargar las publicaciones."}</Typography>
   if (!feeds || feeds.length === 0) return <Typography sx={{ mt: 2, textAlign: 'center' }}>No hay publicaciones para mostrar.</Typography>
 
 

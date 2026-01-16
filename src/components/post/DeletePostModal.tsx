@@ -52,7 +52,7 @@ export default function DeletePostModal({ post }: DeletePostModalProps) {
         },
         onError: (error) => {
             console.error("Error al eliminar el post:", error);
-            toast.error("Error al eliminar la publicación");
+            toast.error(error instanceof Error ? error.message : "Error al eliminar la publicación");
         }
     });
 

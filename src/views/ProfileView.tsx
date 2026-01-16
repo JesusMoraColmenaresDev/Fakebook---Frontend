@@ -35,9 +35,12 @@ export default function ProfileView() {
 
     const { profileUser, isLoadingUser, userError } = useGetUserById(userId!, isMyProfile)
     const { friendshipProfileUser, isLoadingFriendship, friendshipError } = useGetFriendship(userId!, isMyProfile)
-    console.log(friendshipProfileUser)
-
+    console.log("el estado de la amistad es:", friendshipProfileUser);
+    console.log("el error del react query es:", friendshipError);
     const finalProfileUser = isMyProfile ? currentUser : profileUser
+    // Si hay error, tratamos como si no hay amistad
+    const showFriendship = !friendshipError ? friendshipProfileUser : null;
+
 
     const renderFriendshipActions = () => {
         if (isMyProfile) {
@@ -51,20 +54,20 @@ export default function ProfileView() {
             );
         }
 
-        // Si no hay una relación de amistad, mostramos el botón para enviar solicitud
-        if (!friendshipProfileUser) {
+        // Si no hay una relación de amistad (o hay error), mostramos el botón para enviar solicitud
+        if (!showFriendship) {
             if (finalProfileUser) {
                 return <div className='flex gap-2'>
                     <FriendRequestButton idProfile={finalProfileUser.id.toString()} textButton={"Agregar amigo"} />
                     <ButtonSendMessage userReceiverId={finalProfileUser!.id.toString()} />
-
                 </div>;
             }
             return null;
         }
 
-        const { status, user_id } = friendshipProfileUser;
+        const { status, user_id } = showFriendship;
         const currentUserId = currentUser?.id.toString();
+        console.log("Estado de la amistad:", showFriendship);
 
         switch (status) {
             case 'pending':
@@ -73,7 +76,7 @@ export default function ProfileView() {
                     // TODO: Implementar la lógica para cancelar la solicitud
                     return (
                         <div className='flex gap-2'>
-                            <CancelFriendRequestButton idFriendship={friendshipProfileUser.id.toString()} textButton="Cancelar solicitud"></CancelFriendRequestButton>
+                            <CancelFriendRequestButton idFriendship={showFriendship.id.toString()} textButton="Cancelar solicitud"></CancelFriendRequestButton>
                             <ButtonSendMessage userReceiverId={finalProfileUser!.id.toString()} />
                         </div>
                     )
@@ -83,8 +86,8 @@ export default function ProfileView() {
                     // osea si no es el user_id , entonces sera el friendId
                     return (
                         <div className="flex gap-2">
-                            <ConfirmFriendRequestButton idFriendship={friendshipProfileUser.id.toString()}></ConfirmFriendRequestButton>
-                            <CancelFriendRequestButton idFriendship={friendshipProfileUser.id.toString()} textButton="Eliminar solicitud"></CancelFriendRequestButton>
+                            <ConfirmFriendRequestButton idFriendship={showFriendship.id.toString()}></ConfirmFriendRequestButton>
+                            <CancelFriendRequestButton idFriendship={showFriendship.id.toString()} textButton="Eliminar solicitud"></CancelFriendRequestButton>
                         </div>
                     );
                 }
@@ -93,16 +96,14 @@ export default function ProfileView() {
                 return (
                     <div className='flex gap-2'>
                         <Box className="flex gap-2 w-fit px-4 py-2 bg-[#1877f2] text-white rounded-lg">Amigos</Box>
-                        <CancelFriendRequestButton idFriendship={friendshipProfileUser.id.toString()} textButton="Eliminar de amigos"></CancelFriendRequestButton>
+                        <CancelFriendRequestButton idFriendship={showFriendship.id.toString()} textButton="Eliminar de amigos"></CancelFriendRequestButton>
                         <ButtonSendMessage userReceiverId={finalProfileUser!.id.toString()} />
                     </div>
                 )
-
-
         }
     };
 
-    if (isLoadingUser || isLoadingFriendship) return <div>Cargando perfil</div>
+    if (isLoadingUser) return <div>Cargando perfil</div>
 
     return (
         <div className="min-h-screen bg-[#F0F2F5]">

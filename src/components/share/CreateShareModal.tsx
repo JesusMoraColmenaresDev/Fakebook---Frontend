@@ -49,7 +49,7 @@ export default function CreateShareModal({ post }: CreateShareModalProps) {
         },
         onError: (error) => {
             console.error("Error al compartir la publicacion:", error);
-            toast.error("Error al compartir la publicacion")
+            toast.error(error instanceof Error ? error.message : "Error al compartir la publicación");
         }
     })
 

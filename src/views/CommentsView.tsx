@@ -29,10 +29,12 @@ export default function CommentsView() {
   }
 
   // 3. Manejar estado de error o datos faltantes
-  if (commentsError || !id || !type) {
+  if (commentsError || itemError || !id || !type) {
     return (
-  <div className="max-w-[1000px] mx-auto mt-4">
-        <Typography color="error" textAlign="center">No se pudo cargar la publicación o los comentarios.</Typography>
+      <div className="max-w-[1000px] mx-auto mt-4">
+        <Typography color="error" textAlign="center">
+          {commentsError?.message || itemError?.message || "No se pudo cargar la publicación o los comentarios."}
+        </Typography>
       </div>
     );
   }

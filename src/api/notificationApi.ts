@@ -1,20 +1,22 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { api } from "./apiConfig";
 import { notificationsResponseSchema, type notificationArrayType } from '../types';
+import { isAxiosError } from "axios";
 
-export const getNotifications = async (): Promise<notificationArrayType | null> => {
+export const getNotifications = async (): Promise<notificationArrayType> => {
     try {
         const { data } = await api.get('/notifications');
         const response = notificationsResponseSchema.safeParse(data);
         if (response.success) {
             return response.data;
-        }else{
-            return null
         }
-
+        throw new Error("Respuesta inválida al obtener notificaciones.");
     } catch (error) {
-        console.error("Error fetching notifications:", error);
-        return null
+        if (isAxiosError(error) && error.response) {
+            throw new Error(error.response.data.error || "Error desconocido del servidor");
+        }
+        throw new Error(error instanceof Error ? error.message : "Error desconocido");
     }
 };
 
