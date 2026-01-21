@@ -7,7 +7,7 @@ import Menu from '@mui/material/Menu';
 import Typography from '@mui/material/Typography';
 import { MoreVerticalIcon } from 'lucide-react';
 import React, { useState } from 'react'
-import type { PostType } from '../../types';
+import type { PostType } from '../../types/postTypes';
 import Box from '@mui/material/Box';
 import { useUserStore } from '../../userStore';
 import EditPostModal from './EditPostModal';

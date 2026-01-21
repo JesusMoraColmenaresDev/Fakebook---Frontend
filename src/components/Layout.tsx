@@ -5,7 +5,7 @@ import { getCurrentUser } from "../api/userApi";
 import { type Subscription } from "@rails/actioncable";
 import { actionCableService } from "../services/actionCableService";
 import { useNotificationStore } from "../notificationStore";
-import type { Notification } from "../types";
+import type { Notification } from "../types/notificationTypes";
 import { AppBar, Box, Button, colors, IconButton, Toolbar, Typography } from "@mui/material";
 import { MenuIcon } from "lucide-react";
 import PeopleIcon from '@mui/icons-material/People';

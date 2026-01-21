@@ -1,6 +1,6 @@
 
 import { useQuery } from "@tanstack/react-query"
-import { PostSchema, PostArraySchema, type PostFormType, type PostEditType, type PostType } from "../types"
+import { PostSchema, PostArraySchema, type PostFormType, type PostEditType, type PostType } from "../types/postTypes"
 import { api } from "./apiConfig"
 import { isAxiosError } from "axios"
 
@@ -9,7 +9,7 @@ import { isAxiosError } from "axios"
  * @param content El contenido de la publicación.
  * @param post_picture La URL de la imagen de la publicación.
  */
-export const createPost = async ({content, post_picture} : PostFormType): Promise<PostType[]> => {
+export const createPost = async ({content, post_picture} : PostFormType): Promise<PostType> => {
     try {
         const {data} = await api.post("/posts", {
             post: {
@@ -17,7 +17,8 @@ export const createPost = async ({content, post_picture} : PostFormType): Promis
                 post_picture: post_picture
             }
         })
-        const response = PostArraySchema.safeParse(data)
+        console.log("Respuesta al crear post:", data)
+        const response = PostSchema.safeParse(data)
         if(response.success){
             return response.data
         }

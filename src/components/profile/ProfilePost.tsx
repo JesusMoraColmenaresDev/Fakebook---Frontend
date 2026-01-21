@@ -2,7 +2,7 @@
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import PostItem from '../post/PostItem'
-import type { PostType } from '../../types'
+import type { PostType } from '../../types/postTypes'
 import { useGetFeedsByUser } from '../../api/feedApi'
 import ShareItem from '../share/ShareItem'
 

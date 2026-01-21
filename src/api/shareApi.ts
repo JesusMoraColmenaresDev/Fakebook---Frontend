@@ -1,5 +1,5 @@
 
-import { ShareSchema, type ShareFormType, type ShareEditType } from "../types"
+import { ShareSchema, type ShareFormType, type ShareEditType } from "../types/shareTypes"
 import { api } from "./apiConfig"
 import { isAxiosError } from "axios"
 

@@ -1,6 +1,6 @@
 
 import { useQuery } from "@tanstack/react-query"
-import { FeedItemSchema, FeedResponseSchema } from "../types"
+import { FeedItemSchema, FeedResponseSchema } from "../types/feedTypes"
 import { api } from "./apiConfig"
 import { isAxiosError } from "axios"
 
@@ -36,7 +36,9 @@ export const useGetFeeds = () => {
 export const getFeedsByUser = async (userId  :string) => {
     try {
         const {data} = await api.get("/feed?user_id="+userId)
+        console.log("Datos de feeds por usuario:", data)
         const response = FeedResponseSchema.safeParse(data)
+        console.log("Respuesta parseada de feeds por usuario:", response.error)
         if(response.success) return response.data
         throw new Error("Respuesta inválida al obtener feeds del usuario.");
     } catch (error) {

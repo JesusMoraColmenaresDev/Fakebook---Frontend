@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import { useUserStore } from '../../userStore';
 import Avatar from '@mui/material/Avatar';
 import { stringAvatar } from '../../utils/colorsUtil';
-import type { CreateCommentType } from '../../types';
+import type { CreateCommentType } from '../../types/commentTypes';
 import IconButton from '@mui/material/IconButton';
 import SendIcon from '@mui/icons-material/Send';
 import { toast } from 'react-toastify';

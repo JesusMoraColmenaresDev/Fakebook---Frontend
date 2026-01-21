@@ -7,7 +7,7 @@ import { useGetConversations } from '../api/conversationApi';
 import { useUserStore } from '../userStore';
 import { stringAvatar } from '../utils/colorsUtil';
 import { actionCableService } from '../services/actionCableService';
-import type { ConversationListItemType } from '../types';
+import type { ConversationListItemType } from '../types/conversationTypes';
 
 export default function ConversationsListView() {
   // 1. Obtenemos los datos iniciales de la API.
@@ -20,6 +20,7 @@ export default function ConversationsListView() {
   // 3. Efecto para cargar las conversaciones iniciales en nuestro estado.
   useEffect(() => {
     if (initialConversations) {
+      console.log(initialConversations)
       setConversations(initialConversations);
     }
   }, [initialConversations]);
@@ -72,7 +73,7 @@ export default function ConversationsListView() {
               const lastMessageText = convo.last_message
                 ? `${convo.last_message.user_id === currentUser?.id ? 'Tú: ' : ''}${convo.last_message.content}`
                 : 'Inicia la conversación';
-
+                console.log("Renderizando conversación:", convo);
               return (
                 <ListItem key={convo.id} component={RouterLink} to={`/conversation/${convo.id}`} sx={{ gap: 2, '&:hover': { bgcolor: 'action.hover' } }}>
                   <ListItemAvatar>
@@ -83,6 +84,7 @@ export default function ConversationsListView() {
                       primary={`${convo.other_user.name} ${convo.other_user.last_name}`}
                       secondary={<Typography component="span" variant="body2" color="text.secondary" noWrap>{lastMessageText}</Typography>}
                     />
+                    
                     {convo.unread_count > 0 && <Typography sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '50%', bgcolor:'primary.main', height: '24px', width: '24px', color: 'white', fontSize: '12px'}}>{convo.unread_count}</Typography>}
                   </Box>
                 </ListItem>

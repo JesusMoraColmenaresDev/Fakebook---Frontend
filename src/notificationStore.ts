@@ -1,11 +1,12 @@
 import { create } from "zustand";
-import type { Notification } from "./types";
+import type { Notification } from "./types/notificationTypes";
 
 interface NotificationState {
-    notifications: Notification[];
-    hasBeenFetched: boolean; // Para saber si ya se hizo la carga inicial
-    setNotifications: (notifications: Notification[]) => void;
-    addNotification: (notification: Notification) => void;
+  notifications: Notification[];
+  hasBeenFetched: boolean; // Para saber si ya se hizo la carga inicial
+  setNotifications: (notifications: Notification[]) => void;
+  addNotification: (notification: Notification) => void;
+  resetNotifications: () => void;
 }
 
 export const useNotificationStore = create<NotificationState>((set) => ({
@@ -16,4 +17,5 @@ export const useNotificationStore = create<NotificationState>((set) => ({
     // Añade la nueva notificación al principio de la lista para que aparezca primero.
     notifications: [notification, ...state.notifications]
   })),
+  resetNotifications: () => set({ notifications: [], hasBeenFetched: false }),
 }));

@@ -1,7 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "./apiConfig";
-import { notificationsResponseSchema, type notificationArrayType } from '../types';
+import { notificationsResponseSchema, type notificationArrayType } from '../types/notificationTypes';
 import { isAxiosError } from "axios";
 
 export const getNotifications = async (): Promise<notificationArrayType> => {

@@ -6,7 +6,7 @@ import { Box, TextField, Button, Paper, Typography, CircularProgress, List, List
 
 import { actionCableService } from '../services/actionCableService';
 import { useGetMessages } from '../api/conversationApi';
-import type { MessageType } from '../types';
+import type { MessageType } from '../types/messageTypes';
 import { useUserStore } from '../userStore';
 import { stringAvatar } from '../utils/colorsUtil';
 
@@ -60,6 +60,7 @@ export default function ConversationView() {
             ? prevMessages
             : [...prevMessages, newMessage]
         );
+        console.log("Nuevo mensaje recibido:", newMessage);
       },
     });
 

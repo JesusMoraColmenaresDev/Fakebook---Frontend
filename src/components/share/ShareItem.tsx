@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import type { ShareType } from '../../types'
+import type { ShareType } from '../../types/shareTypes'
 import Card from '@mui/material/Card'
 import PostItem from '../post/PostItem'
 import Box from '@mui/material/Box'

@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
 import MenuItem from '@mui/material/MenuItem';
-import type { ShareType } from "../../types";
+import type { ShareType } from "../../types/shareTypes";
 // import { deleteShare } from "../../api/shareApi"; // <-- Deberás crear esta función
 // import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";

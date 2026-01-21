@@ -3,7 +3,8 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "./apiConfig";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
-import { ConversationSchema, MessageArraySchema, type ConversationType, type MessageType, type ConversationListItemType, ConversationListSchema } from "../types";
+import { ConversationSchema, type ConversationType, type ConversationListItemType, ConversationListSchema } from "../types/conversationTypes";
+import { MessageArraySchema, type MessageType } from "../types/messageTypes";
 import { isAxiosError } from "axios";
 
 /**

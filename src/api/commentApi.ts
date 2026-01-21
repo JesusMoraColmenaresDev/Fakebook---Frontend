@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { CommentSchema, CommentArraySchema, PostSchema, ShareSchema, type CreateCommentType, type PostType, type ShareType } from "../types";
+import { CommentSchema, CommentArraySchema, type CreateCommentType } from "../types/commentTypes";
+import { ShareSchema, type ShareType } from "../types/shareTypes";
+import { PostSchema, type PostType } from "../types/postTypes";
 import { api } from "./apiConfig";
 
 

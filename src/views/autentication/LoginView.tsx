@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
-import type { LoginFormType as LoginForm } from "../../types"
+import type { LoginFormType as LoginForm } from "../../types/authTypes"
 import { api } from "../../api/apiConfig"
 import { handleLoginSucces } from "../../utils/authenticationUtils"
 import { useNavigate } from "react-router"

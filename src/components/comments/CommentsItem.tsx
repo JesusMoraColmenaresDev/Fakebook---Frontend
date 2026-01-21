@@ -1,5 +1,5 @@
 import React from 'react'
-import type { CommentArrayType, CommentType } from '../../types'
+import type { CommentArrayType, CommentType } from '../../types/commentTypes'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'

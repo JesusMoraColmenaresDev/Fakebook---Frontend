@@ -9,6 +9,7 @@ export default function NotificationsView() {
   // 1. Conectamos con el store de notificaciones
   const { notifications, hasBeenFetched, setNotifications } = useNotificationStore();
 
+  console.log("Notificaciones en el store:", notifications);
   // 2. Usamos nuestro nuevo hook de React Query.
   //    La consulta solo se ejecutará si `hasBeenFetched` es false.
   const {
@@ -16,6 +17,8 @@ export default function NotificationsView() {
     isLoading,
     error
   } = useGetNotifications(!hasBeenFetched);
+
+  console.log("Notificaciones obtenidas de la API:", initialNotifications);
 
   // 3. Efecto para sincronizar los datos de React Query con nuestro store de Zustand.
   //    Esto solo se ejecuta cuando la llamada a la API es exitosa y nos devuelve datos.

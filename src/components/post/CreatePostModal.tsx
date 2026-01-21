@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
-import type { PostFormType } from "../../types";
+import type { PostFormType } from "../../types/postTypes";
 import { createPost } from "../../api/postApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router";

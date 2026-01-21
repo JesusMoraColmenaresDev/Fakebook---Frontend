@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router";
-import type { UserItemType } from "../../types";
+import type { UserItemType } from "../../types/userTypes";
 import Avatar from "@mui/material/Avatar";
 import { stringAvatar } from "../../utils/colorsUtil";
 import IconButton from "@mui/material/IconButton";

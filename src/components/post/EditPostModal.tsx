@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { useForm } from "react-hook-form";
 import MenuItem from '@mui/material/MenuItem';
-import type { PostType, PostFormType  } from "../../types";
+import type { PostType, PostFormType  } from "../../types/postTypes";
 import { editPost } from "../../api/postApi";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router";

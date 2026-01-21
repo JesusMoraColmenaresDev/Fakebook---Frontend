@@ -1,7 +1,8 @@
 import { Box, Button } from '@mui/material'
 import React from 'react'
 import { Link, useParams } from 'react-router'
-import type { PostType, ShareType } from '../../types'
+import type { ShareType } from '../../types/shareTypes'
+import type { PostType } from '../../types/postTypes'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 
 

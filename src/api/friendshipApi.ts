@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query"
 import { api } from "./apiConfig"
-import { FriendshipSchema, type FriendshipType } from "../types";
+import { FriendshipSchema, type FriendshipType } from "../types/friendshipTypes";
 import { isAxiosError } from "axios";
 
 /**

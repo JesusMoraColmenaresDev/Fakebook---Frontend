@@ -1,5 +1,5 @@
 import React from 'react'
-import type { Notification } from '../../types'
+import type { Notification } from '../../types/notificationTypes'
 import { Avatar, Box, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material'
 import { stringAvatar } from '../../utils/colorsUtil'
 import { Link as RouterLink } from 'react-router';

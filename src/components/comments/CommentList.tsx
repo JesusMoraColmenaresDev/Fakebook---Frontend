@@ -1,5 +1,4 @@
-import React from 'react'
-import type { CommentArrayType, CommentType } from '../../types'
+import type { CommentArrayType, CommentType } from '../../types/commentTypes'
 import CommentsItem from './CommentsItem'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'

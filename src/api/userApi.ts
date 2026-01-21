@@ -1,7 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "./apiConfig";
-import { UserSchema, UserItemArraySchema, type UserType, type UserItemArrayType } from "../types";
+import { UserSchema, UserItemArraySchema, type UserType, type UserItemArrayType } from "../types/userTypes";
 import { isAxiosError } from "axios";
 
 /**
