@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router';
-import { useForm, type SubmitHandler,  } from 'react-hook-form';
+import { useForm, type SubmitHandler, } from 'react-hook-form';
 import { Subscription } from '@rails/actioncable';
 import { Box, TextField, Button, Paper, Typography, CircularProgress, List, ListItem, ListItemText, Avatar } from '@mui/material';
 
 import { actionCableService } from '../services/actionCableService';
-import { useGetMessages } from '../api/conversationApi';
+import { useGetMessages, useMarkMessageAsRead } from '../api/conversationApi';
 import type { MessageType } from '../types/messageTypes';
 import { useUserStore } from '../userStore';
 import { stringAvatar } from '../utils/colorsUtil';
@@ -23,6 +23,8 @@ export default function ConversationView() {
 
   // 1. Obtener el historial de mensajes de la API
   const { data: initialMessages, isLoading, error } = useGetMessages(conversationId!);
+
+  const markMessageAsReadMutation = useMarkMessageAsRead();
 
   const { register, handleSubmit, reset, formState: { isSubmitting } } = useForm<FormInputs>();
 
@@ -53,14 +55,26 @@ export default function ConversationView() {
         console.log(`Desconectado del canal de la conversación ${conversationId}`);
       },
       received: (newMessage: MessageType) => {
-        // Añadimos el nuevo mensaje a nuestro estado.
+        let messageToAdd = newMessage;
+
+        // Si el mensaje es para esta conversación, lo envió otro usuario y no está leído
+        if (
+          newMessage.conversation_id?.toString() === conversationId &&
+          newMessage.user.id !== currentUser?.id &&
+          !newMessage.read
+        ) {
+          // Marcar como leído en el backend
+          markMessageAsReadMutation.mutate(newMessage.id.toString());
+          // Actualizar localmente el mensaje como leído
+          console.log("mensaje nuevo leido ya con el chat abierto:", newMessage);
+          messageToAdd = { ...newMessage, read: true };
+        }
+
         setMessages((prevMessages) =>
-          // Evitamos duplicados por si el mensaje ya existe (puede pasar por latencia)
-          prevMessages.find((msg) => msg.id === newMessage.id)
+          prevMessages.find((msg) => msg.id === messageToAdd.id)
             ? prevMessages
-            : [...prevMessages, newMessage]
+            : [...prevMessages, messageToAdd]
         );
-        console.log("Nuevo mensaje recibido:", newMessage);
       },
     });
 
@@ -97,7 +111,7 @@ export default function ConversationView() {
   }
 
   return (
-    <Box sx={{maxHeight: '800px', display: 'flex', flexDirection: 'column', p: 2, bgcolor: '#F0F2F5' }}>
+    <Box sx={{ maxHeight: '800px', display: 'flex', flexDirection: 'column', p: 2, bgcolor: '#F0F2F5' }}>
       <Paper elevation={2} sx={{ flexGrow: 1, overflowY: 'auto', p: 2, display: 'flex', flexDirection: 'column' }}>
         <List>
           {messages.map((msg) => {

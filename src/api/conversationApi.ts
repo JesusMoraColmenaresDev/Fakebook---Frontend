@@ -52,6 +52,7 @@ export const useCreateOrGetConversation = () => {
 export const getMessages = async (conversationId: string): Promise<MessageType[]> => {
   try {
     const { data } = await api.get(`/conversations/${conversationId}/messages`);
+    console.log("Datos puros recibidos de la API de mensajes:", data);
     const response = MessageArraySchema.safeParse(data);
     if (!response.success) {
       throw new Error("Los datos de mensajes recibidos del servidor son inválidos.");
@@ -76,6 +77,38 @@ export const useGetMessages = (conversationId: string) => {
     refetchOnWindowFocus: false,
   });
 };
+
+/**
+ * Marca un mensaje como leído en la API.
+ * @param messageId El ID del mensaje a marcar como leído.
+ */
+export const markMessageAsRead = async (messageId: string): Promise<MessageType> => {
+  try {
+    const { data } = await api.patch(`/messages/${messageId}/read`);
+    console.log("read del mensaje actualizado:", data);
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error || "Error desconocido del servidor");
+    }
+    throw new Error(error instanceof Error ? error.message : "Error desconocido");
+  }
+};
+
+/**
+ * Hook para marcar un mensaje como leído.
+ */
+export const useMarkMessageAsRead = () => {
+  return useMutation({
+    mutationFn: markMessageAsRead,
+    onError: (error) => {
+      console.log("Error al marcar el mensaje como leído:", error);
+      toast.error("No se pudo marcar el mensaje como leído.");
+    },
+  });
+};
+
+
 
 /**
  * Obtiene la lista de todas las conversaciones del usuario actual.
@@ -103,7 +136,6 @@ export const useGetConversations = () => {
   return useQuery({
     queryKey: ['conversations'],
     queryFn: getConversations,
-    // Opcional: Refrescar la lista de chats cada cierto tiempo.
-    // refetchInterval: 30000, 
   });
 };
+

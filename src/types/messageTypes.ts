@@ -6,6 +6,8 @@ export const MessageSchema = z.object({
     id: z.number(),
     content: z.string(),
     user_id: z.number(),
+    conversation_id: z.number(),
+    read: z.boolean(),
     created_at: z.string(),
     user: UserItemSchema,
 });
